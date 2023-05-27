@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
+const rootUrl = "http://10.0.2.2:8000/api/";
 
 const kPrimaryColor = Color.fromRGBO(3, 4, 94, 1);
 const kPrimary100Color = Color.fromRGBO(202, 240, 248, 1);
