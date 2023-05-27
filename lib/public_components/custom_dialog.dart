@@ -136,7 +136,7 @@ class CustomDialog extends StatefulBuilder {
     } else if (dialogType == DialogType.danger) {
       return kTextDanger;
     } else if (dialogType == DialogType.warning) {
-      return kTextWarning;
+      return kTextDanger;
     } else {
       return kTextInfo;
     }
@@ -148,7 +148,7 @@ class CustomDialog extends StatefulBuilder {
     } else if (dialogType == DialogType.danger) {
       return kBgDanger;
     } else if (dialogType == DialogType.warning) {
-      return kBgWarning;
+      return kBgDanger;
     } else {
       return kBgInfo;
     }

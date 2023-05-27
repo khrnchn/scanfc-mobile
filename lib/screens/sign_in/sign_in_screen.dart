@@ -70,6 +70,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 26,
+                      color: kPrimaryColor,
                     ),
                   ),
                   const Text(
@@ -77,6 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 26,
+                      color: kPrimaryColor,
                     ),
                   ),
                   Padding(
@@ -159,13 +161,13 @@ class _SignInScreenState extends State<SignInScreen> {
                       action: SnackBarAction(
                         label: "Verify Now",
                         onPressed: () {
-                          // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          // navigateTo(
-                          //     context,
-                          //     SignUpScreen(
-                          //       activeStepper: 4,
-                          //       userModel: userModel,
-                          //     ));
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          navigateTo(
+                              context,
+                              SignUpScreen(
+                                activeStepper: 2,
+                                userModel: userModel,
+                              ));
                         },
                       ),
                     ),
@@ -173,31 +175,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
                   return;
                   // If payment required
-                } else if (state.failureResponse!.statusCode ==
-                    HttpResponse.HTTP_PAYMENT_REQUIRED) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      duration: Duration(seconds: 5),
-                      content: Text(
-                          state.failureResponse?.message ?? "Server error"),
-                      behavior: SnackBarBehavior.floating,
-                      action: SnackBarAction(
-                        label: "Pay Now",
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          // Navigate to payment fee confirmation
-                          // navigateTo(
-                          //     context,
-                          //     SignUpScreen(
-                          //       activeStepper: 5,
-                          //       userModel: userModel,
-                          //     ));
-                        },
-                      ),
-                    ),
-                  );
-
-                  return;
                 }
               }
             }
@@ -217,7 +194,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ],
                 decoration: textFieldInputDecoration(
                   "Email",
-                  hintText: "ex: example@aufmbz.com",
+                  hintText: "ex: example@uitm.com",
                   prefixIcon: const Icon(
                     Iconsax.sms,
                     color: kPrimaryColor,
@@ -248,8 +225,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               ScaleTap(
                 onPressed: () {
-                  print("navigate to forgot password screen");
-                  //navigateTo(context, ForgotPasswordScreen());
+                  navigateTo(context, ForgotPasswordScreen());
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -295,7 +271,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     GestureDetector(
                         onTap: () {
                           print("navigate to sign up screen");
-                          //navigateTo(context, SignUpScreen());
+                          navigateTo(context, SignUpScreen());
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(

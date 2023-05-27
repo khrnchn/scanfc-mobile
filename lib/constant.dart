@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
-const rootUrl = "http://10.0.2.2:8000/api/";
+const rootUrl = "https://easy.aufmbz.com/api/";
 
 const kPrimaryColor = Color.fromRGBO(3, 4, 94, 1);
 const kPrimary100Color = Color.fromRGBO(202, 240, 248, 1);
@@ -16,7 +16,7 @@ const kDarkGrey = Color.fromRGBO(64, 64, 64, 1);
 const kBlack = Colors.black;
 const kBgColor = Color.fromARGB(255, 252, 252, 252);
 const kTransparent = Colors.transparent;
-const kPrimaryLight = Color.fromARGB(255, 238, 250, 246);
+const kPrimaryLight = Color.fromRGBO(0, 119, 182, 1);
 const kDanger = Color.fromARGB(255, 209, 0, 10);
 const kDisabledBg = Color.fromARGB(255, 224, 224, 224);
 const kPrimaryLightColor = Color.fromRGBO(241, 244, 250, 1.0);

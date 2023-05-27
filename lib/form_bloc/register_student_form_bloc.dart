@@ -179,7 +179,7 @@ class RegisterStudentFormBloc extends FormBloc<String, String> {
       name,
       email,
       password,
-      confirmPassword,
+      matrixId,
     
     ]);
 
@@ -213,12 +213,8 @@ class RegisterStudentFormBloc extends FormBloc<String, String> {
       requestModel.userModel!.email = email.value.trim();
       requestModel.userModel!.phoneNo = phoneNo.value.trim();
       requestModel.userModel!.password = password.value.trim();
-    
-
-      // User details
-  
       requestModel.userModel!.name = name.value.trim();
-  
+
       // Call API
       DefaultResponseModel responseModel =
           await userBloc.register(requestModel);
