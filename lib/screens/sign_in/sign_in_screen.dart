@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nfc_smart_attendance/screens/navigation_drawer/navigation_drawer.dart';
 
 import 'package:nfc_smart_attendance/screens/sign_up/sign_up_screen.dart';
 import 'package:provider/provider.dart';
@@ -251,8 +252,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ButtonPrimary(
                 "Login",
                 onPressed: () {
-                  print("navigate to home page screen");
-                  // navigateTo(context, HomePagescreen());
+                  navigateTo(context, NavigationDrawerScreen());
                 },
                 isLoading: _isLoading,
                 loadingText: "Signing you in...",
