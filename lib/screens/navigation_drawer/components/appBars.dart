@@ -33,7 +33,7 @@ AppBar appBarClassToday() {
     title: const Text(
       "Class Today",
       style: TextStyle(
-        color: kBlack,
+        color: kPrimaryColor,
         fontWeight: FontWeight.bold,
       ),
     ),
@@ -44,7 +44,7 @@ AppBar appBarClassToday() {
               onPressed: () => Scaffold.of(context).openDrawer(),
               child: Icon(
                 Icons.menu,
-                color: kBlack,
+                color: kPrimaryColor,
               )),
     ),
   );
