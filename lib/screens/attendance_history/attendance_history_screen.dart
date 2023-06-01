@@ -30,7 +30,7 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
             onPressed: () {
               navigateTo(
                 context,
-                AttendanceHistoryDetailsScreen(title: "UHL2412"),
+                AttendanceHistoryDetailsScreen(title: "ISP641"),
               );
             },
             child: Padding(
@@ -63,7 +63,7 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                           ),
                           Space(10),
                           Text(
-                            "UHL2412",
+                            "ISP641",
                             style: TextStyle(
                               color: kPrimaryColor,
                               fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                           ),
                           Space(3),
                           Text(
-                            "English For Professional",
+                            "E Commerce Application",
                             style: TextStyle(
                               color: kPrimaryColor,
                               fontWeight: FontWeight.bold,
