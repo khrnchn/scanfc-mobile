@@ -24,7 +24,7 @@ const kTextGray = Color.fromRGBO(0, 0, 0, 0.40);
 
 // Success
 const kBgSuccess = Color.fromRGBO(236, 253, 245, 1.0);
-const kTextSuccess = kPrimaryColor;
+const kTextSuccess = Color.fromRGBO(0, 139, 56, 1.0);
 
 // Danger
 const kBgDanger = Color.fromRGBO(254, 242, 242, 1.0);

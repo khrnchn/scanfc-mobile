@@ -4,6 +4,7 @@ import 'package:nfc_smart_attendance/constant.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:nfc_smart_attendance/helpers/general_method.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
+import 'package:nfc_smart_attendance/public_components/status_badges.dart';
 import 'package:nfc_smart_attendance/screens/face_to_face_class/face_to_face_class_screen.dart';
 import 'package:nfc_smart_attendance/theme.dart';
 
@@ -28,7 +29,13 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
           child: ScaleTap(
             onPressed: () {
               print("navigate to scan nfc");
-              navigateTo(context, classMode == "Face To Face"?FaceToFaceClassScreen(classMode: classMode,): Placeholder());
+              navigateTo(
+                  context,
+                  classMode == "Face To Face"
+                      ? FaceToFaceClassScreen(
+                          classMode: classMode,
+                        )
+                      : Placeholder());
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -52,6 +59,9 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          faceToFaceBadge(),
+                          //onlineClassBadge(),
+                          Space(10),
                           Text(
                             "UHL2412",
                             style: TextStyle(
@@ -67,14 +77,8 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Space(20),
-                          Text(
-                            classMode,
-                            style: TextStyle(
-                              color: kPrimaryLight,
-                              fontSize: 11,
-                            ),
-                          ),
+                          Space(10),
+
                           Text(
                             "26 March 2023 | 4.00pm",
                             style: TextStyle(

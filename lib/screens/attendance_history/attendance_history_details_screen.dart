@@ -1,7 +1,12 @@
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_smart_attendance/constant.dart';
+import 'package:nfc_smart_attendance/helpers/general_method.dart';
+import 'package:nfc_smart_attendance/public_components/button_primary.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/public_components/theme_app_bar.dart';
+import '../../public_components/status_badges.dart';
+import 'package:nfc_smart_attendance/screens/request_exemption/request_exemption_screen.dart';
 
 class AttendanceHistoryDetailsScreen extends StatefulWidget {
   final String title;
@@ -163,6 +168,46 @@ class _AttendanceHistoryDetailsScreenState
                 ],
               ),
               Space(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Attendance Status: ",
+                    style: TextStyle(
+                      color: kPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  presentBadge(),
+                  absentBadge(),
+                ],
+              ),
+              Space(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Exemption Status: ",
+                    style: TextStyle(
+                      color: kPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  exemptionNeededBadge(),
+                  exemptionSubmittedBadge(),
+                  //noExemptionNeededBadge(),
+                ],
+              ),
+              Expanded(child: Space(10)),
+              DelayedDisplay(
+                delay: Duration(milliseconds: 200),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: ButtonPrimary("Submit Exemption", onPressed: () {
+                    navigateTo(context, RequestExemptionScreen());
+                  }),
+                ),
+              ),
             ],
           ),
         ),

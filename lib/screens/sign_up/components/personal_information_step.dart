@@ -105,7 +105,6 @@ class _PersonalInformationStepState extends State<PersonalInformationStep> {
             delay: Duration(milliseconds: delayAnimationDuration),
             child: TextFieldBlocBuilder(
               textFieldBloc: widget.formBloc.matrixId,
-              keyboardType: TextInputType.number,
               cursorColor: kPrimaryColor,
               decoration: textFieldInputDecoration(
                 "Matrix ID",

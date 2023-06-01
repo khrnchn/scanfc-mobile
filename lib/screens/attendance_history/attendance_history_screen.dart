@@ -6,6 +6,7 @@ import 'package:nfc_smart_attendance/helpers/general_method.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/screens/attendance_history/attendance_history_details_screen.dart';
 import 'package:nfc_smart_attendance/theme.dart';
+import '../../public_components/status_badges.dart';
 
 class AttendanceHistoryScreen extends StatefulWidget {
   const AttendanceHistoryScreen({super.key});
@@ -52,6 +53,15 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            children: [
+                              //presentBadge(),
+                              absentBadge(),
+                              exemptionNeededBadge(),
+                              exemptionSubmittedBadge(),
+                            ],
+                          ),
+                          Space(10),
                           Text(
                             "UHL2412",
                             style: TextStyle(
@@ -94,4 +104,6 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
       },
     );
   }
+
+  
 }

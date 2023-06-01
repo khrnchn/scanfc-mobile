@@ -188,13 +188,7 @@ class _FaceToFaceClassScreenState extends State<FaceToFaceClassScreen>
                       textAlign: TextAlign.center,
                     ),
                     Space(40),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: ButtonPrimary("I'm not attend this class",
-                          onPressed: () {
-                        navigateTo(context, RequestExemptionScreen());
-                      }),
-                    )
+                    
                   ],
                 ),
               ),

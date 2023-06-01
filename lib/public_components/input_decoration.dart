@@ -2,12 +2,13 @@ import 'package:nfc_smart_attendance/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-
 InputDecoration textFieldInputDecoration(String labelText,
-    {String? hintText, Icon? prefixIcon}) {
+    {String? hintText, Icon? prefixIcon, Icon? prefix}) {
   return InputDecoration(
+    alignLabelWithHint: true,
     contentPadding: EdgeInsets.fromLTRB(10, 15, 10, 15),
     prefixIcon: prefixIcon,
+    prefix: prefix,
     hintText: hintText,
     hintStyle: TextStyle(
       color: Colors.black.withOpacity(0.33),
