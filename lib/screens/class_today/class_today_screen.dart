@@ -63,7 +63,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                           //onlineClassBadge(),
                           Space(10),
                           Text(
-                            "UHL2412",
+                            "ISP641",
                             style: TextStyle(
                               color: kPrimaryColor,
                               fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                           ),
                           Space(3),
                           Text(
-                            "English For Professional",
+                            "E Commerce Application",
                             style: TextStyle(
                               color: kPrimaryColor,
                               fontWeight: FontWeight.bold,
