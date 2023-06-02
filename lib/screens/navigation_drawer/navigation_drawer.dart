@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:nfc_smart_attendance/constant.dart';
 import 'package:nfc_smart_attendance/helpers/general_method.dart';
+import 'package:nfc_smart_attendance/models/user/user_model.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/screens/attendance_history/attendance_history_screen.dart';
 import 'package:nfc_smart_attendance/screens/change_password/change_password_screen.dart';
 import 'package:nfc_smart_attendance/screens/class_today/class_today_screen.dart';
-import 'package:nfc_smart_attendance/screens/matrix_id/matrix_id_screen.dart';
+import 'package:nfc_smart_attendance/screens/matric_id/matric_id_screen.dart';
 import 'package:nfc_smart_attendance/screens/navigation_drawer/components/appBars.dart';
 
 class NavigationDrawerScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _NavigationDrawerScreenState extends State<NavigationDrawerScreen> {
   // auto navigate to class today screen
   int _selectedIndex = 1;
   final pageController = PageController();
+  UserModel _userModel = UserModel();
 
   @override
   void initState() {
@@ -294,7 +296,7 @@ class _NavigationDrawerScreenState extends State<NavigationDrawerScreen> {
   Widget _bodyScreen() {
     switch (_selectedIndex) {
       case 0:
-        return MatrixIDScreen();
+        return MatricIDScreen(userModel: _userModel,);
       case 1:
         return ClassTodayScreen();
       case 2:

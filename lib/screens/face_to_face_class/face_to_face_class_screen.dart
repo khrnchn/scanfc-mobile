@@ -10,7 +10,14 @@ import 'package:nfc_smart_attendance/screens/request_exemption/request_exemption
 
 class FaceToFaceClassScreen extends StatefulWidget {
   final String classMode;
-  const FaceToFaceClassScreen({super.key, required this.classMode});
+  final bool isAttendanceSubmitted;
+  final Function(bool) updateAttendance;
+  const FaceToFaceClassScreen({
+    super.key,
+    required this.classMode,
+    required this.isAttendanceSubmitted,
+    required this.updateAttendance,
+  });
 
   @override
   State<FaceToFaceClassScreen> createState() => _FaceToFaceClassScreenState();
@@ -23,6 +30,16 @@ class _FaceToFaceClassScreenState extends State<FaceToFaceClassScreen>
   late Animation<double> _opacityAnimation;
   late Animation<Offset> _offsetAnimation;
   bool _isVisible = true;
+  bool isAttendanceSubmitted = false;
+
+  void submitAttendance() {
+    setState(() {
+      isAttendanceSubmitted = true;
+    });
+    widget.updateAttendance(true);
+    print("update Attendance");
+    Navigator.pop(context, isAttendanceSubmitted);
+  }
 
   @override
   void initState() {
@@ -187,8 +204,19 @@ class _FaceToFaceClassScreenState extends State<FaceToFaceClassScreen>
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    Space(10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: ButtonPrimary(
+                        "Attend Class",
+                        onPressed: () {
+                          widget.isAttendanceSubmitted
+                              ? null
+                              : submitAttendance();
+                        },
+                      ),
+                    ),
                     Space(40),
-                    
                   ],
                 ),
               ),

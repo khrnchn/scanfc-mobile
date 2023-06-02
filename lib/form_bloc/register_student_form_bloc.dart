@@ -27,14 +27,6 @@ class RegisterStudentFormBloc extends FormBloc<String, String> {
     ],
   );
 
-  // Emergency Name
-  final emergencyName = TextFieldBloc(
-    validators: [
-      InputValidator.required,
-      InputValidator.nameChar,
-    ],
-  );
-
   // Phone Number
   final phoneNo = TextFieldBloc(
     validators: [
@@ -43,32 +35,10 @@ class RegisterStudentFormBloc extends FormBloc<String, String> {
     ],
   );
 
-  // Emergency Phone Number
-  final emergencyPhoneNo = TextFieldBloc(
+  final nickName = TextFieldBloc(
     validators: [
       InputValidator.required,
-      InputValidator.phoneNo,
-    ],
-  );
-
-  // Emergency relation
-  final emergencyRelation = TextFieldBloc(
-    validators: [
-      InputValidator.required,
-    ],
-  );
-
-  //TODO: buat validator for nursing license
-  // nursing license
-  final nursingLicense = TextFieldBloc(
-    validators: [
-      InputValidator.required,
-    ],
-  );
-
-  final collegeNursingSchool = TextFieldBloc(
-    validators: [
-      InputValidator.required,
+      InputValidator.nickName,
     ],
   );
 
@@ -79,8 +49,6 @@ class RegisterStudentFormBloc extends FormBloc<String, String> {
   );
 
   // Title
-
-
 
   // gender
   final gender = SelectFieldBloc(
@@ -144,7 +112,7 @@ class RegisterStudentFormBloc extends FormBloc<String, String> {
     return null;
   }
 
-   // Check matrix id
+  // Check matrix id
   Future<String?> _checkMatrixId(String matrixId) async {
     bool isExist = await userBloc.checkMatrixId(matrixId);
     if (isExist) {
@@ -180,10 +148,8 @@ class RegisterStudentFormBloc extends FormBloc<String, String> {
       email,
       password,
       matrixId,
-    
+      nickName,
     ]);
-
-
 
     confirmPassword
       ..addValidators([_confirmPassword(password)])

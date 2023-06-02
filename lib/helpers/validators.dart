@@ -21,6 +21,13 @@ class InputValidator {
     return null;
   }
 
+  static String? nickName(String nickname) {
+    if (nickname.trim().length > 15) {
+      return "15 Characters only";
+    }
+    return null;
+  }
+
   static String? passwordChar(String password) {
     if (password.length < 8) {
       return "The password must have at least 8 characters";

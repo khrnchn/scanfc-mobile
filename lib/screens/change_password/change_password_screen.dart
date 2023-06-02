@@ -164,11 +164,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         ),
                         Expanded(
                           flex: 1,
-                          child: ButtonPrimary(
-                            "Update", onPressed: () => formBloc.submit(),
-                            loadingText: "Updating...",
-                            isLoading: _isLoading,
-                            //Navigator.pop(context);
+                          child: DelayedDisplay(
+                            delay:
+                                Duration(milliseconds: delayAnimationDuration),
+                            child: ButtonPrimary(
+                              "Update", onPressed: () => formBloc.submit(),
+                              loadingText: "Updating...",
+                              isLoading: _isLoading,
+                              //Navigator.pop(context);
+                            ),
                           ),
                         ),
                       ],

@@ -49,7 +49,11 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                             isAttendanceSubmitted: isAttendanceSubmitted,
                             updateAttendance: updateAttendance,
                           )
-                        : FaceToFaceClassScreen(classMode: classMode);
+                        : FaceToFaceClassScreen(
+                            classMode: classMode,
+                            isAttendanceSubmitted: isAttendanceSubmitted,
+                            updateAttendance: updateAttendance,
+                          );
                   },
                 ),
               );

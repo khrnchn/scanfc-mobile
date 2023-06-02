@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nfc_smart_attendance/screens/sign_in/sign_in_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

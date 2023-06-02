@@ -51,8 +51,24 @@ class _PersonalInformationStepState extends State<PersonalInformationStep> {
               keyboardType: TextInputType.name,
               cursorColor: kPrimaryColor,
               decoration: textFieldInputDecoration(
-                "Name",
-                hintText: "ex: Rolex Dilly",
+                "Full Name",
+                hintText: "ex: Muhammad Izham",
+                prefixIcon: Icon(
+                  Iconsax.profile_circle,
+                  color: kPrimaryColor,
+                ),
+              ),
+            ),
+          ),
+          DelayedDisplay(
+            delay: Duration(milliseconds: delayAnimationDuration),
+            child: TextFieldBlocBuilder(
+              textFieldBloc: widget.formBloc.name,
+              keyboardType: TextInputType.name,
+              cursorColor: kPrimaryColor,
+              decoration: textFieldInputDecoration(
+                "Nickname",
+                hintText: "ex: Muhd Izham",
                 prefixIcon: Icon(
                   Iconsax.profile_circle,
                   color: kPrimaryColor,

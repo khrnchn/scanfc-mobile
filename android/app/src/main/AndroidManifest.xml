@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.nfc.smartattendance.nfc_smart_attendance">
+    
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.NFC" />
+
    <application
         android:label="UITM Jasin NFC Attendance"
         android:name="${applicationName}"

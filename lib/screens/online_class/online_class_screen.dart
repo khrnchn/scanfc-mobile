@@ -139,7 +139,7 @@ class _OnlineClassScreenState extends State<OnlineClassScreen> {
                                 "Attend Class",
                                 onPressed: () {
                                   widget.isAttendanceSubmitted
-                                      ? print("null")
+                                      ? null
                                       : submitAttendance();
                                 },
                               ),
