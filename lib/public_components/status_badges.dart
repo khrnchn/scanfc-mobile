@@ -129,3 +129,41 @@ Widget onlineClassBadge() {
     ),
   );
 }
+
+Widget attendanceSubmittedBadge() {
+  return Container(
+    margin: EdgeInsets.only(left: 5),
+    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+    decoration: BoxDecoration(
+      color: kBgInfo,
+      border: Border.all(color: kTextInfo),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    child: const Text(
+      "Attendance Submitted",
+      style: TextStyle(
+        color: kTextInfo,
+        fontSize: 11,
+      ),
+    ),
+  );
+}
+
+Widget attendanceNotSubmittedBadge() {
+  return Container(
+    margin: EdgeInsets.only(left: 5),
+    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+    decoration: BoxDecoration(
+      color: kBgDanger,
+      border: Border.all(color: kTextDanger),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    child: const Text(
+      "Attendance Not Submitted",
+      style: TextStyle(
+        color: kTextDanger,
+        fontSize: 11,
+      ),
+    ),
+  );
+}

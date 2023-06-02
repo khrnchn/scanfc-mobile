@@ -67,7 +67,7 @@ class _FaceToFaceClassScreenState extends State<FaceToFaceClassScreen>
         elevation: 0,
         centerTitle: true,
         title: Text(
-          widget.classMode,
+          "${widget.classMode} Class",
           style: TextStyle(
             color: kPrimaryColor,
             fontWeight: FontWeight.bold,

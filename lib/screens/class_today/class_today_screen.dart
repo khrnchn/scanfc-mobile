@@ -6,6 +6,7 @@ import 'package:nfc_smart_attendance/helpers/general_method.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/public_components/status_badges.dart';
 import 'package:nfc_smart_attendance/screens/face_to_face_class/face_to_face_class_screen.dart';
+import 'package:nfc_smart_attendance/screens/online_class/online_class_screen.dart';
 import 'package:nfc_smart_attendance/theme.dart';
 
 class ClassTodayScreen extends StatefulWidget {
@@ -17,7 +18,16 @@ class ClassTodayScreen extends StatefulWidget {
 
 class _ClassTodayScreenState extends State<ClassTodayScreen> {
   int delayAnimationDuration = 100;
-  String classMode = "Face To Face";
+  String classMode = "Face to Face";
+
+  bool isAttendanceSubmitted = false;
+
+  void updateAttendance(bool submitted) {
+    setState(() {
+      isAttendanceSubmitted = submitted;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -27,15 +37,28 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
         return DelayedDisplay(
           delay: Duration(milliseconds: delayAnimationDuration),
           child: ScaleTap(
-            onPressed: () {
+            onPressed: () async {
               print("navigate to scan nfc");
-              navigateTo(
-                  context,
-                  classMode == "Face To Face"
-                      ? FaceToFaceClassScreen(
-                          classMode: classMode,
-                        )
-                      : Placeholder());
+              var result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return classMode != "Face to Face"
+                        ? OnlineClassScreen(
+                            classMode: classMode,
+                            isAttendanceSubmitted: isAttendanceSubmitted,
+                            updateAttendance: updateAttendance,
+                          )
+                        : FaceToFaceClassScreen(classMode: classMode);
+                  },
+                ),
+              );
+
+              if (result != null && result is bool) {
+                setState(() {
+                  isAttendanceSubmitted = result;
+                });
+              }
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -59,8 +82,17 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          faceToFaceBadge(),
+                          Row(
+                            children: [
+                              faceToFaceBadge(),
+                              if (isAttendanceSubmitted)
+                                attendanceSubmittedBadge()
+                              else
+                                attendanceNotSubmittedBadge(),
+                            ],
+                          ),
                           //onlineClassBadge(),
+
                           Space(10),
                           Text(
                             "ISP641",
