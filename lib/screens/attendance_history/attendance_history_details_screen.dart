@@ -198,12 +198,12 @@ class _AttendanceHistoryDetailsScreenState
                   //noExemptionNeededBadge(),
                 ],
               ),
-              Expanded(child: Space(10)),
+              Expanded(child: Space(0)),
               DelayedDisplay(
                 delay: Duration(milliseconds: 200),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: ButtonPrimary("Submit Exemption", onPressed: () {
+                  child: ButtonPrimary("Upload Exemption", onPressed: () {
                     navigateTo(context, RequestExemptionScreen());
                   }),
                 ),

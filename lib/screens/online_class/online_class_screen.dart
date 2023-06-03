@@ -159,6 +159,7 @@ class _OnlineClassScreenState extends State<OnlineClassScreen> {
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),

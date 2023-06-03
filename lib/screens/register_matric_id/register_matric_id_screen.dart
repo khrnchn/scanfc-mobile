@@ -244,53 +244,84 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
       body: SafeArea(
         child: FutureBuilder<bool>(
           future: NfcManager.instance.isAvailable(),
-          builder: (context, ss) => ss.data != true
-              ? Center(child: Text('NFC functionality is not available on your device.'))
-              : Column(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: scanCircle(context),
+          builder: (context, ss) {
+            return ss.data != true
+                ? Container(
+                    padding: EdgeInsets.all(15),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Space(10),
+                        Image.asset(
+                          "assets/images/nfc_error.png",
+                          width: 100,
+                        ),
+                        Space(10),
+                        const Text(
+                          "Oops...",
+                          style: TextStyle(
+                            color: kPrimaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Space(10),
+                        const Text(
+                          "NFC functionality is not available on your device. You are not able to register your Matric Card using NFC function",
+                          style: TextStyle(
+                            color: kPrimaryColor,
+                          ),
+                        )
+                      ],
                     ),
-                    Space(50),
-                    Expanded(
-                      flex: 3,
-                      child: DelayedDisplay(
-                        delay: Duration(milliseconds: delayAnimationDuration),
-                        child: Column(
-                          children: [
-                            const Text(
-                              "Scan Matric ID",
-                              style: TextStyle(
-                                color: kPrimaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24,
+                  )
+                : Column(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: scanCircle(context),
+                      ),
+                      Space(50),
+                      Expanded(
+                        flex: 3,
+                        child: DelayedDisplay(
+                          delay: Duration(milliseconds: delayAnimationDuration),
+                          child: Column(
+                            children: [
+                              const Text(
+                                "Scan Matric ID",
+                                style: TextStyle(
+                                  color: kPrimaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                ),
                               ),
-                            ),
-                            Space(10),
-                            const Text(
-                              "Scan your matric ID\nto your phone to register matric card",
-                              style: TextStyle(
-                                color: kPrimaryLight,
+                              Space(10),
+                              const Text(
+                                "Scan your matric ID\nto your phone to register matric card",
+                                style: TextStyle(
+                                  color: kPrimaryLight,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                            ValueListenableBuilder<dynamic>(
-                              valueListenable: result,
-                              builder: (context, value, _) {
-                                print("Card UID: $uid");
-                                print("NDEF status: $value");
-                                // return Text('$uid ${value ?? ''}');
-                                return Text('');
-                              },
-                            ),
-                            Space(40),
-                          ],
+                              ValueListenableBuilder<dynamic>(
+                                valueListenable: result,
+                                builder: (context, value, _) {
+                                  print("Card UID: $uid");
+                                  print("NDEF status: $value");
+                                  // return Text('$uid ${value ?? ''}');
+                                  return Text('');
+                                },
+                              ),
+                              Space(40),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  );
+          },
         ),
       ),
     );

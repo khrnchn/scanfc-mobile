@@ -32,7 +32,7 @@ class _RequestExemptionScreenState extends State<RequestExemptionScreen> {
         appBar: AppBar(
           elevation: 0,
           centerTitle: true,
-          title: Text(
+          title: const Text(
             "Request Exemption",
             style: TextStyle(
               color: kPrimaryColor,
@@ -48,55 +48,59 @@ class _RequestExemptionScreenState extends State<RequestExemptionScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                DelayedDisplay(
-                  delay: Duration(milliseconds: delayAnimationDuration),
-                  child: UploadFile(
-                    formBloc: requestExemptionFormBloc,
-                    onFileSelected: (XFile selectedFile) {
-                      setState(() {
-                        _selectedFile = selectedFile;
-                      });
-                    },
-                  ),
-                ),
-                Space(10),
-                DelayedDisplay(
-                  delay: Duration(milliseconds: delayAnimationDuration),
-                  child: const Text(
-                    "Please upload your exemption proof. The format can be in 'pdf', 'png', 'jpeg', 'jpg'. ",
-                    style: TextStyle(
-                      color: kSecondaryColor,
-                      fontSize: 12,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  DelayedDisplay(
+                    delay: Duration(milliseconds: delayAnimationDuration),
+                    child: UploadFile(
+                      formBloc: requestExemptionFormBloc,
+                      onFileSelected: (XFile selectedFile) {
+                        setState(() {
+                          _selectedFile = selectedFile;
+                        });
+                      },
                     ),
                   ),
-                ),
-                Space(10),
-                DelayedDisplay(
-                  delay: Duration(milliseconds: delayAnimationDuration),
-                  child: TextFieldBlocBuilder(
-                    maxLines: 8,
-                    textFieldBloc: requestExemptionFormBloc.remarks,
-                    keyboardType: TextInputType.multiline,
-                    cursorColor: kPrimaryColor,
-                    decoration: textFieldInputDecoration(
-                      "Remarks (Optional)",
-                      hintText: "ex: My cat is sick that day",
+                  Space(10),
+                  DelayedDisplay(
+                    delay: Duration(milliseconds: delayAnimationDuration),
+                    child: const Text(
+                      "Please upload your exemption proof. The format can be in 'pdf', 'png', 'jpeg', 'jpg'. ",
+                      style: TextStyle(
+                        color: kSecondaryColor,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
-                ),
-                Expanded(child: Space(10)),
-                DelayedDisplay(
-                  delay: Duration(milliseconds: delayAnimationDuration),
-                  child: ButtonPrimary("Submit", onPressed: () {
-                    print("submit exemption");
-                  }),
-                )
-              ],
+                  Space(10),
+                  DelayedDisplay(
+                    delay: Duration(milliseconds: delayAnimationDuration),
+                    child: TextFieldBlocBuilder(
+                      maxLines: 8,
+                      textFieldBloc: requestExemptionFormBloc.remarks,
+                      keyboardType: TextInputType.multiline,
+                      cursorColor: kPrimaryColor,
+                      decoration: textFieldInputDecoration(
+                        "Remarks (Optional)",
+                        hintText: "ex: My cat is sick that day",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+          ),
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(15),
+          child: DelayedDisplay(
+            delay: Duration(milliseconds: delayAnimationDuration),
+            child: ButtonPrimary("Submit Exemption", onPressed: () {
+              print("submit exemption");
+            }),
           ),
         ),
       ),
