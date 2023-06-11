@@ -18,7 +18,7 @@ class ClassTodayScreen extends StatefulWidget {
 
 class _ClassTodayScreenState extends State<ClassTodayScreen> {
   int delayAnimationDuration = 100;
-  String classMode = "Face to Face";
+  String classMode = "Face to Face"; // change to Online
 
   bool isAttendanceSubmitted = false;
 
