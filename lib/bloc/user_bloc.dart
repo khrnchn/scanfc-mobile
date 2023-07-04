@@ -4,6 +4,7 @@ import 'package:nfc_smart_attendance/models/default_response_model.dart';
 import 'package:nfc_smart_attendance/models/login/login_request_model.dart';
 import 'package:nfc_smart_attendance/models/registration/register_student_request_model.dart';
 import 'package:nfc_smart_attendance/models/registration/register_payment_request_model.dart';
+import 'package:nfc_smart_attendance/models/user/card_uid_request_model.dart';
 import 'package:nfc_smart_attendance/models/user/edit_profile_request_model.dart';
 import 'package:nfc_smart_attendance/models/user/user_response_model.dart';
 import 'package:nfc_smart_attendance/public_components/theme_snack_bar.dart';
@@ -51,6 +52,14 @@ class UserBloc {
       RegisterStudentRequestModel requestModel) async {
     // Call the API to register
     return await Webservice.post(UserResource.register(requestModel));
+  }
+
+
+   // set Card UID
+  Future<DefaultResponseModel> setCardUID(
+      CardUIDRequestModel requestModel) async {
+    // Call the API to register
+    return await Webservice.post(UserResource.setCardUID(requestModel));
   }
 
   // payment Registration

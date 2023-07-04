@@ -1,9 +1,13 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
+import 'package:nfc_smart_attendance/bloc/user_bloc.dart';
 import 'package:nfc_smart_attendance/constant.dart';
 import 'dart:typed_data';
 import 'package:nfc_manager/nfc_manager.dart';
+import 'package:nfc_smart_attendance/models/default_response_model.dart';
+import 'package:nfc_smart_attendance/models/user/card_uid_request_model.dart';
 import 'package:nfc_smart_attendance/models/user/user_model.dart';
+import 'package:nfc_smart_attendance/models/user/user_response_model.dart';
 import 'package:nfc_smart_attendance/public_components/custom_dialog.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:im_animations/im_animations.dart';
@@ -101,56 +105,56 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
   //   );
   // }
 
-  void registerMatricCard() async {
-    // Start an NFC session
-    NfcManager.instance.startSession(
-      onDiscovered: (NfcTag tag) async {
-        try {
-          // Read the NDEF message from the tag
-          NdefMessage message = await Ndef.from(tag)!.read();
+  // void registerMatricCard() async {
+  //   // Start an NFC session
+  //   NfcManager.instance.startSession(
+  //     onDiscovered: (NfcTag tag) async {
+  //       try {
+  //         // Read the NDEF message from the tag
+  //         NdefMessage message = await Ndef.from(tag)!.read();
 
-          // Perform the registration process here...
-          // Add your logic to handle the registration of the NFC card as a matric card
+  //         // Perform the registration process here...
+  //         // Add your logic to handle the registration of the NFC card as a matric card
 
-          // Show a dialog box when registration is complete
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: Text('Registration Complete'),
-              content:
-                  Text('The NFC card has been registered as a matric card.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
-        } catch (e) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: Text('Error'),
-              content: Text('Error during registration: $e'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
-        } finally {
-          NfcManager.instance.stopSession();
-        }
-      },
-    );
-  }
+  //         // Show a dialog box when registration is complete
+  //         showDialog(
+  //           context: context,
+  //           builder: (BuildContext context) => AlertDialog(
+  //             title: Text('Registration Complete'),
+  //             content:
+  //                 Text('The NFC card has been registered as a matric card.'),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () {
+  //                   Navigator.pop(context);
+  //                 },
+  //                 child: Text('OK'),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       } catch (e) {
+  //         showDialog(
+  //           context: context,
+  //           builder: (BuildContext context) => AlertDialog(
+  //             title: Text('Error'),
+  //             content: Text('Error during registration: $e'),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () {
+  //                   Navigator.pop(context);
+  //                 },
+  //                 child: Text('OK'),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       } finally {
+  //         NfcManager.instance.stopSession();
+  //       }
+  //     },
+  //   );
+  // }
 
   void _registerNFC() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
@@ -181,18 +185,35 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
         result.value = 'Success to "Ndef Write"';
         NfcManager.instance.stopSession();
         //todo panggil API untuk masukkan card uid ke db sebelum panggil custom dialogue
-        if (mounted) {}
-        CustomDialog.show(
-          context,
-          isDissmissable: false,
-          icon: Iconsax.tick_circle,
-          title: "Success register Matric ID",
-          btnOkText: "OK",
-          btnOkOnPress: () {
-            Navigator.pop(context);
-            widget.isRegisterNFC ? null : _updateNFC();
-          },
-        );
+        UserBloc userBloc = UserBloc();
+        // DefaultResponseModel responseModel = await userBloc.setCardUID(
+        //   CardUIDRequestModel(
+        //     studentId: widget.userModel.id,
+        //     cardUid: uid,
+        //   ),
+        // );
+
+        // if (responseModel.isSuccess) {
+        //   // panggil custom dialogue success
+
+        //   if (mounted) {
+        //     CustomDialog.show(
+        //       context,
+        //       isDissmissable: false,
+        //       icon: Iconsax.tick_circle,
+        //       title: "Success register Matric ID",
+        //       btnOkText: "OK",
+        //       btnOkOnPress: () {
+        //         Navigator.pop(context);
+        //         widget.isRegisterNFC ? null : _updateNFC();
+        //       },
+        //     );
+        //   }
+        // } else {
+        //   //error
+        // }
+
+        print("Success register Matric ID");
       } catch (e) {
         result.value = e;
         NfcManager.instance.stopSession(errorMessage: result.value.toString());
@@ -311,7 +332,7 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
                                   print("Card UID: $uid");
                                   print("NDEF status: $value");
                                   // return Text('$uid ${value ?? ''}');
-                                  return Text('');
+                                  return Text("Card UID: $uid");
                                 },
                               ),
                               Space(40),

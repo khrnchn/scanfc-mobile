@@ -4,6 +4,7 @@ import 'package:nfc_smart_attendance/models/default_response_model.dart';
 import 'package:nfc_smart_attendance/models/login/login_request_model.dart';
 import 'package:nfc_smart_attendance/models/registration/register_student_request_model.dart';
 import 'package:nfc_smart_attendance/models/registration/register_payment_request_model.dart';
+import 'package:nfc_smart_attendance/models/user/card_uid_request_model.dart';
 import 'package:nfc_smart_attendance/models/user/edit_profile_request_model.dart';
 import 'package:nfc_smart_attendance/models/user/user_model.dart';
 import 'package:nfc_smart_attendance/models/user/user_response_model.dart';
@@ -59,7 +60,18 @@ class UserResource {
         });
   }
 
-  // To check IC Number exist or not
+    // Call Register Card UID
+  static Resource setCardUID(CardUIDRequestModel cardUID) {
+    return Resource(
+      // use student id/CardUID
+        url: '${cardUID.studentId}/cardUID',
+        data: cardUID.toJson(),
+        parse: (response) {
+          return DefaultResponseModel(json.decode(response.body));
+        });
+  }
+
+  // To check Card UID Number exist or not
   static Resource checkMatrixId(String matrixId) {
     return Resource(
         url: 'matrix-id/' + matrixId,

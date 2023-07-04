@@ -1,5 +1,6 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_smart_attendance/constant.dart';
 import 'package:im_animations/im_animations.dart';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
@@ -205,6 +206,7 @@ class _FaceToFaceClassScreenState extends State<FaceToFaceClassScreen>
                       textAlign: TextAlign.center,
                     ),
                     Space(10),
+                    // buat comparison card uid from db dengan user model
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: ButtonPrimary(
