@@ -63,7 +63,7 @@ class _PersonalInformationStepState extends State<PersonalInformationStep> {
           DelayedDisplay(
             delay: Duration(milliseconds: delayAnimationDuration),
             child: TextFieldBlocBuilder(
-              textFieldBloc: widget.formBloc.name,
+              textFieldBloc: widget.formBloc.nickName,
               keyboardType: TextInputType.name,
               cursorColor: kPrimaryColor,
               decoration: textFieldInputDecoration(
