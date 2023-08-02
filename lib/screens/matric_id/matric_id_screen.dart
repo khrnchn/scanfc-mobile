@@ -146,11 +146,13 @@ class _MatricIDScreenState extends State<MatricIDScreen> {
           ),
           Space(30),
           Text(
-            "MUHD IZHAM",
+            "MUHD IZHAM MUHD IZHAM MUHD IZHAM MUHD IZHAM",
             style: TextStyle(
               color: kPrimaryColor,
               fontWeight: FontWeight.bold,
             ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
           ),
           Space(20),
           Text(

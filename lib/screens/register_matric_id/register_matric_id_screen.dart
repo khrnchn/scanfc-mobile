@@ -172,10 +172,9 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
       }
 
       NdefMessage message = NdefMessage([
-        NdefRecord.createText('Muhd Izhamm'),
-        NdefRecord.createUri(Uri.parse('email@email.com')),
-        NdefRecord.createMime(
-            'Matric No', Uint8List.fromList('2020365456'.codeUnits)),
+        NdefRecord.createText('Muhd Izha'),
+        NdefRecord.createUri(Uri.parse('2020365456')),
+        NdefRecord.createMime('Faculty', Uint8List.fromList('FSKM'.codeUnits)),
         // NdefRecord.createExternal(
         //     'com.example', 'mytype', Uint8List.fromList('mydata'.codeUnits)),
       ]);
@@ -194,26 +193,27 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
         // );
 
         // if (responseModel.isSuccess) {
-        //   // panggil custom dialogue success
+        // panggil custom dialogue success
 
-        //   if (mounted) {
-        //     CustomDialog.show(
-        //       context,
-        //       isDissmissable: false,
-        //       icon: Iconsax.tick_circle,
-        //       title: "Success register Matric ID",
-        //       btnOkText: "OK",
-        //       btnOkOnPress: () {
-        //         Navigator.pop(context);
-        //         widget.isRegisterNFC ? null : _updateNFC();
-        //       },
-        //     );
-        //   }
+        if (mounted) {
+          CustomDialog.show(
+            context,
+            isDissmissable: false,
+            icon: Iconsax.tick_circle,
+            title: "Success register Matric ID",
+            btnOkText: "OK",
+            btnOkOnPress: () {
+              Navigator.pop(context);
+              _updateNFC();
+            },
+          );
+        }
         // } else {
         //   //error
         // }
 
         print("Success register Matric ID");
+        //_ndefWriteLock(); jangan letak kalau tak nnt tak boleh unlock balik
       } catch (e) {
         result.value = e;
         NfcManager.instance.stopSession(errorMessage: result.value.toString());
@@ -222,26 +222,27 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
     });
   }
 
-  // void _ndefWriteLock() {
-  //   NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-  //     var ndef = Ndef.from(tag);
-  //     if (ndef == null) {
-  //       result.value = 'Tag is not ndef';
-  //       NfcManager.instance.stopSession(errorMessage: result.value.toString());
-  //       return;
-  //     }
+  void _ndefWriteLock() {
+    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+      var ndef = Ndef.from(tag);
+      if (ndef == null) {
+        result.value = 'Tag is not ndef';
+        NfcManager.instance.stopSession(errorMessage: result.value.toString());
+        return;
+      }
 
-  //     try {
-  //       await ndef.writeLock();
-  //       result.value = 'Success to "Ndef Write Lock"';
-  //       NfcManager.instance.stopSession();
-  //     } catch (e) {
-  //       result.value = e;
-  //       NfcManager.instance.stopSession(errorMessage: result.value.toString());
-  //       return;
-  //     }
-  //   });
-  // }
+      try {
+        await ndef.writeLock();
+        result.value = 'Success to "Ndef Write Lock"';
+        print(result.value);
+        NfcManager.instance.stopSession();
+      } catch (e) {
+        result.value = e;
+        NfcManager.instance.stopSession(errorMessage: result.value.toString());
+        return;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
