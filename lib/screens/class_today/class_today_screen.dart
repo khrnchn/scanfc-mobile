@@ -43,7 +43,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return classMode != "Face to Face"
+                    return classMode != "Online"
                         ? OnlineClassScreen(
                             classMode: classMode,
                             isAttendanceSubmitted: isAttendanceSubmitted,
