@@ -1,18 +1,18 @@
-class CardUIDRequestModel {
-  int? studentId;
+class RegisterCardUIDRequestModel {
+  
   String? cardUid;
 
-  CardUIDRequestModel({this.studentId, this.cardUid});
+  RegisterCardUIDRequestModel({ this.cardUid});
 
-  CardUIDRequestModel.fromJson(Map<String, dynamic> json) {
-    studentId = json['student_id'];
-    cardUid = json['card_uid'];
+  RegisterCardUIDRequestModel.fromJson(Map<String, dynamic> json) {
+   
+    cardUid = json['uuid'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['student_id'] = this.studentId;
-    data['card_uid'] = this.cardUid;
+  
+    data['uuid'] = this.cardUid;
     return data;
   }
 }

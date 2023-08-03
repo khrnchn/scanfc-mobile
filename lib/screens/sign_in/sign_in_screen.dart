@@ -125,9 +125,10 @@ class _SignInScreenState extends State<SignInScreen> {
             userDataNotifier.setUserData(state.successResponse!);
             // Navigate to home page screen
             print("navigate to home page");
-            // Navigator.of(context).pushAndRemoveUntil(
-            //     MaterialPageRoute(builder: (context) => HomePageScreen()),
-            //     (Route<dynamic> route) => false);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => NavigationDrawerScreen()),
+                (Route<dynamic> route) => false);
           },
           // Validation failed
           onSubmissionFailed: (context, state) {
@@ -242,21 +243,21 @@ class _SignInScreenState extends State<SignInScreen> {
                 height: 50,
               ),
               //Button Login
-              // ButtonPrimary(
-              //   "Login",
-              //   onPressed: formBloc.submit,
-              //   isLoading: _isLoading,
-              //   loadingText: "Signing you in...",
-              // ),
-
               ButtonPrimary(
                 "Login",
-                onPressed: () {
-                  navigateTo(context, NavigationDrawerScreen());
-                },
+                onPressed: formBloc.submit,
                 isLoading: _isLoading,
                 loadingText: "Signing you in...",
               ),
+
+              // ButtonPrimary(
+              //   "Login",
+              //   onPressed: () {
+              //     navigateTo(context, NavigationDrawerScreen());
+              //   },
+              //   isLoading: _isLoading,
+              //   loadingText: "Signing you in...",
+              // ),
 
               GestureDetector(
                 onTap: () {

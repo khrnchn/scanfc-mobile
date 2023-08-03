@@ -41,10 +41,10 @@ class UserResource {
   }
 
   // Call Login API
-  static Resource login(LoginRequestModel loginModel) {
+  static Resource login(LoginRequestModel loginRequestModel) {
     return Resource(
         url: 'login',
-        data: loginModel.toJson(),
+        data: loginRequestModel.toJson(),
         parse: (response) {
           return UserResponseModel(json.decode(response.body));
         });
@@ -60,14 +60,14 @@ class UserResource {
         });
   }
 
-    // Call Register Card UID
-  static Resource setCardUID(CardUIDRequestModel cardUID) {
+  // Call Register Card UID
+  static Resource setCardUID(RegisterCardUIDRequestModel cardUIDRequestModel) {
     return Resource(
-      // use student id/CardUID
-        url: '${cardUID.studentId}/cardUID',
-        data: cardUID.toJson(),
+        // use student id/CardUID
+        url: 'user/register_nfc',
+        data: cardUIDRequestModel.toJson(),
         parse: (response) {
-          return DefaultResponseModel(json.decode(response.body));
+          return UserResponseModel(json.decode(response.body));
         });
   }
 

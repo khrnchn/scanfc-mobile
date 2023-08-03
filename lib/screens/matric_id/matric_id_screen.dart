@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nfc_smart_attendance/bloc/user_bloc.dart';
 import 'package:nfc_smart_attendance/constant.dart';
+import 'package:nfc_smart_attendance/helpers/secure_storage_api.dart';
 import 'package:nfc_smart_attendance/models/user/user_model.dart';
+import 'package:nfc_smart_attendance/models/user/user_response_model.dart';
+import 'package:nfc_smart_attendance/providers/user_data_notifier.dart';
 import 'package:nfc_smart_attendance/public_components/button_primary.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
+import 'package:nfc_smart_attendance/public_components/theme_snack_bar.dart';
+import 'package:nfc_smart_attendance/public_components/theme_spinner.dart';
+import 'package:nfc_smart_attendance/resource/user_resource.dart';
 import 'package:nfc_smart_attendance/screens/register_matric_id/register_matric_id_screen.dart';
 import 'package:nfc_smart_attendance/screens/register_matric_id/register_matric_id_screen2.dart';
 import 'package:nfc_smart_attendance/theme.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:provider/provider.dart';
 
 class MatricIDScreen extends StatefulWidget {
-  final UserModel userModel;
-  const MatricIDScreen({super.key, required this.userModel});
+  const MatricIDScreen({
+    super.key,
+  });
 
   @override
   State<MatricIDScreen> createState() => _MatricIDScreenState();
@@ -20,14 +31,113 @@ class MatricIDScreen extends StatefulWidget {
 class _MatricIDScreenState extends State<MatricIDScreen> {
   bool isRegisterNFC = false;
 
-  void updateNFC(bool registered) {
-    setState(() {
-      isRegisterNFC = registered;
-    });
+  late Future<UserModel?> _userModel;
+  UserBloc userBloc = UserBloc();
+
+  // For refresher
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void updateNFC() {
+    _onRefresh();
+  }
+
+  void _onRefresh() async {
+    UserModel? user = await checkAuthenticated();
+
+    if (user != null) {
+      // Declare notifier
+      final UserDataNotifier userDataNotifier =
+          Provider.of<UserDataNotifier>(context, listen: false);
+      // Set to the notifier
+      userDataNotifier.setUserData(user);
+    }
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
+  Future<UserModel?> checkAuthenticated() async {
+    //get data from secure storage
+    try {
+      final UserResponseModel userResponseModel = await userBloc.me(context);
+      if (userResponseModel.data != null) {
+        print(userResponseModel.message);
+        //save in secured storage
+        await SecureStorageApi.saveObject("user", userResponseModel.data!);
+        //save in GetIt
+        UserResource.setGetIt(userResponseModel.data!);
+
+        return userResponseModel.data!;
+      } else {
+        ThemeSnackBar.showSnackBar(context, userResponseModel.message);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<UserModel?> getUserDetails() async {
+    //return this._memoizer.runOnce((user) async {
+    // Means no argument passed to this interface, so current user profile
+    // Get from getit current user data
+    UserModel user = GetIt.instance.get<UserModel>();
+    if (user.id != null) {
+      return user;
+    } else {
+      return await checkAuthenticated();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _userModel = getUserDetails();
   }
 
   @override
   Widget build(BuildContext context) {
+    return SmartRefresher(
+      controller: _refreshController,
+      header: WaterDropMaterialHeader(),
+      onRefresh: _onRefresh,
+      child: SingleChildScrollView(
+        child: // Use the user data notifier
+            Consumer<UserDataNotifier>(builder: (context, userDataNotifier, _) {
+          // If the user data in the notifier is not null
+          if (userDataNotifier.user != null) {
+            // Show UI using the data in the notifier
+            return body(
+              context: context,
+              userModel: userDataNotifier.user!,
+            );
+            // Else try o get the data from shared preferences the show the UI
+          } else {
+            return FutureBuilder(
+                future: _userModel,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    // Set to the user data notifier
+                    userDataNotifier.setUserData(snapshot.data);
+                    // return UI
+                    return body(
+                      context: context,
+                      userModel: snapshot.data!,
+                    );
+                  } else {
+                    // Show loading
+                    return Center(
+                      child: ThemeSpinner.spinner(),
+                    );
+                  }
+                });
+          }
+        }),
+      ),
+    );
+  }
+
+  Widget body({required BuildContext context, required UserModel userModel}) {
     return Padding(
         padding: const EdgeInsets.all(15),
         child: SizedBox(
@@ -35,11 +145,11 @@ class _MatricIDScreenState extends State<MatricIDScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              isRegisterNFC
-                  ? matricAfterRegister(context)
+              userModel.uuid != ""
+                  ? matricAfterRegister(context, userModel)
                   : Column(
                       children: [
-                        matricBeforeRegister(context),
+                        matricBeforeRegister(context, userModel),
                         Space(10),
                         const Text(
                           "Please register your Matric Card",
@@ -53,43 +163,43 @@ class _MatricIDScreenState extends State<MatricIDScreen> {
               profileInformation(
                 title: "Full Name",
                 icon: Icons.person,
-                sub: "Muhammad Izham",
+                sub: userModel.name!,
               ),
               profileInformation(
                 title: "Email",
                 icon: Icons.email,
-                sub: "izham@uitm.com",
+                sub: userModel.email!,
               ),
               profileInformation(
                 title: "Phone No",
                 icon: Icons.phone,
-                sub: "0123456789",
+                sub: userModel.phoneNo!,
               ),
             ],
           ),
         ));
   }
 
-  ScaleTap matricBeforeRegister(BuildContext context) {
+  ScaleTap matricBeforeRegister(BuildContext context, UserModel userModel) {
     return ScaleTap(
-      onPressed: () async {
-        var result = await Navigator.push(
+      onPressed: () {
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
               return RegisterMatricIdScreen(
-                userModel: widget.userModel,
+                userModel: userModel,
                 isRegisterNFC: isRegisterNFC,
                 updateNFC: updateNFC,
               );
             },
           ),
         );
-        if (result != null && result is bool) {
-          setState(() {
-            isRegisterNFC = result;
-          });
-        }
+        // if (result != null && result is bool) {
+        //   setState(() {
+        //     isRegisterNFC = result;
+        //   });
+        // }
       },
       child: Container(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -114,7 +224,7 @@ class _MatricIDScreenState extends State<MatricIDScreen> {
     );
   }
 
-  Widget matricAfterRegister(BuildContext context) {
+  Widget matricAfterRegister(BuildContext context, UserModel userModel) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       width: MediaQuery.of(context).size.width / 2.4,
@@ -146,17 +256,17 @@ class _MatricIDScreenState extends State<MatricIDScreen> {
           ),
           Space(30),
           Text(
-            "MUHD IZHAM MUHD IZHAM MUHD IZHAM MUHD IZHAM",
+            userModel.name!,
             style: TextStyle(
               color: kPrimaryColor,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
-            maxLines: 2,
+            maxLines: 1,
           ),
           Space(20),
           Text(
-            "2020365467",
+            userModel.matrixId!,
             style: TextStyle(
               color: kPrimaryColor,
               fontWeight: FontWeight.bold,

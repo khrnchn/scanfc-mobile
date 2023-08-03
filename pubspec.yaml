@@ -61,6 +61,10 @@ dependencies:
   qr_code_scanner: ^1.0.1
   flutter_nfc_kit: ^3.3.1
   ndef: ^0.3.1
+  flutter_screenutil: ^5.8.4
+  infinite_scroll_pagination: ^3.2.0
+  pull_to_refresh: ^2.0.0
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:

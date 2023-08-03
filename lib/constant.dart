@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
-const rootUrl = "https://easy.aufmbz.com/api/";
+const rootUrl = "https://scanfc-uitm.mahirandigital.com/api/";
 
 const kPrimaryColor = Color.fromRGBO(3, 4, 94, 1);
 const kPrimary100Color = Color.fromRGBO(202, 240, 248, 1);

@@ -14,7 +14,7 @@ class LoginFormBloc extends FormBloc<UserModel, UserResponseModel> {
 
   // For email field
   final email = TextFieldBloc(
-    // initialValue: "mahathirbz@gmail.com",
+    initialValue: "hisyam@student.uitm.com",
     validators: [
       FieldBlocValidators.required,
     ],
@@ -22,7 +22,7 @@ class LoginFormBloc extends FormBloc<UserModel, UserResponseModel> {
 
   // For password field
   final password = TextFieldBloc(
-    // initialValue: "password",
+    initialValue: "password",
     validators: [
       FieldBlocValidators.required,
     ],
@@ -49,10 +49,6 @@ class LoginFormBloc extends FormBloc<UserModel, UserResponseModel> {
       // Handle API response
       if (userResponseModel.isSuccess &&
           userResponseModel.data!.accessToken != null) {
- 
-
-   
-
         emitSuccess(successResponse: userResponseModel.data!);
       } else {
         // Trigger fail event

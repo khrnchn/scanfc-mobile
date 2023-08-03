@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 ThemeData theme() {
   return ThemeData(
     brightness: Brightness.light,
-    primarySwatch: Colors.red,
+    primarySwatch: Colors.blue,
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: appBarTheme(),
     scrollbarTheme: ScrollbarThemeData(),

@@ -17,7 +17,7 @@ import 'package:iconsax/iconsax.dart';
 class RegisterMatricIdScreen extends StatefulWidget {
   final UserModel userModel;
   final bool isRegisterNFC;
-  final Function(bool) updateNFC;
+  final Function() updateNFC;
   const RegisterMatricIdScreen(
       {super.key,
       required this.userModel,
@@ -36,16 +36,17 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
   late Animation<double> _opacityAnimation;
   late Animation<Offset> _offsetAnimation;
   String uid = '';
-  bool isNFCUpdated = false;
+  // bool isNFCUpdated = false;
 
-  void _updateNFC() {
-    setState(() {
-      isNFCUpdated = true;
-    });
-    widget.updateNFC(true);
-    print("update NFC");
-    Navigator.pop(context, isNFCUpdated);
-  }
+  // void _updateNFC() {
+  //   // setState(() {
+  //   //   isNFCUpdated = true;
+  //   // });
+  //   widget.updateNFC();
+  //   print("update NFC");
+  //   //Navigator.pop(context, isNFCUpdated);
+  //   Navigator.pop(context);
+  // }
 
   @override
   void initState() {
@@ -160,21 +161,44 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       var mytag = tag.data["mifareultralight"]["identifier"]
           .map((e) => e.toRadixString(16).padLeft(2, '0'))
-          .join('');
+          .join('')
+          .toString()
+          .toUpperCase();
+
+      // var lastID = mytag[mytag.length - 1];
 
       result.value = mytag;
       uid = result.value;
+
       var ndef = Ndef.from(tag);
       if (ndef == null || !ndef.isWritable) {
         result.value = 'Tag is not ndef writable';
+        // custom dialogue card has been lock
+        if (mounted) {
+          CustomDialog.show(
+            context,
+            isDissmissable: false,
+            icon: Iconsax.info_circle,
+            title: "Your card has been lock, please try another card",
+            btnOkText: "OK",
+            btnOkOnPress: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              widget.updateNFC();
+            },
+          );
+        }
         NfcManager.instance.stopSession(errorMessage: result.value);
         return;
       }
 
       NdefMessage message = NdefMessage([
-        NdefRecord.createText('Muhd Izha'),
-        NdefRecord.createUri(Uri.parse('2020365456')),
-        NdefRecord.createMime('Faculty', Uint8List.fromList('FSKM'.codeUnits)),
+        NdefRecord.createText(widget.userModel.name!),
+        NdefRecord.createUri(Uri.parse(widget.userModel.matrixId!)),
+        NdefRecord.createMime(
+            'Faculty',
+            Uint8List.fromList(
+                widget.userModel.facultyId!.toString().codeUnits)),
         // NdefRecord.createExternal(
         //     'com.example', 'mytype', Uint8List.fromList('mydata'.codeUnits)),
       ]);
@@ -184,13 +208,6 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
         result.value = 'Success to "Ndef Write"';
         NfcManager.instance.stopSession();
         //todo panggil API untuk masukkan card uid ke db sebelum panggil custom dialogue
-        UserBloc userBloc = UserBloc();
-        // DefaultResponseModel responseModel = await userBloc.setCardUID(
-        //   CardUIDRequestModel(
-        //     studentId: widget.userModel.id,
-        //     cardUid: uid,
-        //   ),
-        // );
 
         // if (responseModel.isSuccess) {
         // panggil custom dialogue success
@@ -202,14 +219,13 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
             icon: Iconsax.tick_circle,
             title: "Success register Matric ID",
             btnOkText: "OK",
-            btnOkOnPress: () {
-              Navigator.pop(context);
-              _updateNFC();
+            btnOkOnPress: () async {
+              await registerCardUUID();
             },
           );
         }
         // } else {
-        //   //error
+
         // }
 
         print("Success register Matric ID");
@@ -220,6 +236,42 @@ class _RegisterMatricIdScreenState extends State<RegisterMatricIdScreen>
         return;
       }
     });
+  }
+
+  Future<void> registerCardUUID() async {
+    UserBloc userBloc = UserBloc();
+    UserResponseModel responseModel = await userBloc.setCardUID(
+      RegisterCardUIDRequestModel(
+        cardUid: uid,
+      ),
+    );
+
+    if (responseModel.isSuccess) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      
+      widget.updateNFC();
+    } else {
+      // matikan current dialog
+      Navigator.pop(context);
+
+      if (mounted) {
+        CustomDialog.show(
+          context,
+          isDissmissable: false,
+          icon: Iconsax.info_circle,
+          title: "Unsucessfull register matric card",
+          btnOkText: "OK",
+          btnOkOnPress: () {
+            // matikan current dialog
+            Navigator.pop(context);
+            // back to profile page
+            Navigator.pop(context);
+            widget.updateNFC();
+          },
+        );
+      }
+    }
   }
 
   void _ndefWriteLock() {

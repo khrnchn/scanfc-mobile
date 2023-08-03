@@ -54,10 +54,9 @@ class UserBloc {
     return await Webservice.post(UserResource.register(requestModel));
   }
 
-
-   // set Card UID
-  Future<DefaultResponseModel> setCardUID(
-      CardUIDRequestModel requestModel) async {
+  // set Card UID
+  Future<UserResponseModel> setCardUID(
+      RegisterCardUIDRequestModel requestModel) async {
     // Call the API to register
     return await Webservice.post(UserResource.setCardUID(requestModel));
   }

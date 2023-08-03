@@ -1,33 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:nfc_smart_attendance/app.dart';
+import 'package:nfc_smart_attendance/helpers/secure_storage_api.dart';
+import 'package:nfc_smart_attendance/models/user/user_model.dart';
+import 'package:nfc_smart_attendance/resource/user_resource.dart';
+import 'package:nfc_smart_attendance/screens/navigation_drawer/navigation_drawer.dart';
 import 'package:nfc_smart_attendance/screens/sign_in/sign_in_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
-}
+  GetIt.instance.registerSingleton<UserModel>(UserModel());
+    UserModel user = UserModel();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+    //save in GetIt
+  UserResource.setGetIt(user);
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'NFC Smart Attendance',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const SignInScreen(),
-      debugShowCheckedModeBanner: false,
-    );
+  bool isAuthenticated = false;
+  String token = await SecureStorageApi.read(key: "access_token");
+  // If access token != ""
+  if (token != "") {
+    // Already login
+    isAuthenticated = true;
   }
+
+    Future<Widget> checkAuth() async {
+    // Initial route
+    Widget routeName = SignInScreen();
+    if (!isAuthenticated) {
+      // Not login yet
+      routeName = SignInScreen();
+    } else {
+      // Already login
+      routeName = NavigationDrawerScreen();
+    }
+    return routeName;
+  }
+
+  Widget initialRoute = await checkAuth();
+   runApp(MyApp(
+    initialRoute: initialRoute,
+  ));
 }
+

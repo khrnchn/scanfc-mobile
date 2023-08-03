@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
+import 'package:nfc_smart_attendance/bloc/user_bloc.dart';
 import 'package:nfc_smart_attendance/constant.dart';
 import 'package:nfc_smart_attendance/helpers/general_method.dart';
 import 'package:nfc_smart_attendance/models/user/user_model.dart';
+import 'package:nfc_smart_attendance/public_components/custom_dialog.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
+import 'package:nfc_smart_attendance/public_components/theme_spinner.dart';
 import 'package:nfc_smart_attendance/screens/attendance_history/attendance_history_screen.dart';
 import 'package:nfc_smart_attendance/screens/change_password/change_password_screen.dart';
 import 'package:nfc_smart_attendance/screens/class_today/class_today_screen.dart';
@@ -11,6 +14,7 @@ import 'package:nfc_smart_attendance/screens/matric_id/matric_id_screen.dart';
 import 'package:nfc_smart_attendance/screens/navigation_drawer/components/appBars.dart';
 
 class NavigationDrawerScreen extends StatefulWidget {
+  static const routeName = '/navigation';
   const NavigationDrawerScreen({super.key});
 
   @override
@@ -248,8 +252,15 @@ class _NavigationDrawerScreenState extends State<NavigationDrawerScreen> {
               thickness: 1,
             ),
             ScaleTap(
-              onPressed: () {
+              onPressed: () async {
+                // Navigator.pop(context);
                 print("logout");
+                UserBloc userBloc = UserBloc();
+                CustomDialog.show(context,
+                    dismissOnTouchOutside: false,
+                    description: "Logging you out...",
+                    center: ThemeSpinner.spinner());
+                await userBloc.signOut(context);
               },
               child: Container(
                 padding: EdgeInsets.all(15),
@@ -296,7 +307,9 @@ class _NavigationDrawerScreenState extends State<NavigationDrawerScreen> {
   Widget _bodyScreen() {
     switch (_selectedIndex) {
       case 0:
-        return MatricIDScreen(userModel: _userModel,);
+        return MatricIDScreen(
+         
+        );
       case 1:
         return ClassTodayScreen();
       case 2:

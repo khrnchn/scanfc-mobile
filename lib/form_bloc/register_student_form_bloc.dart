@@ -170,29 +170,29 @@ class RegisterStudentFormBloc extends FormBloc<String, String> {
 
   @override
   void onSubmitting() async {
-    try {
-      RegisterStudentRequestModel requestModel =
-          RegisterStudentRequestModel(userModel: UserModel());
-      // Account details
+    // try {
+    //   RegisterStudentRequestModel requestModel =
+    //       RegisterStudentRequestModel(userModel: UserModel());
+    //   // Account details
 
-      requestModel.userModel!.matrixId = matrixId.value.trim();
-      requestModel.userModel!.email = email.value.trim();
-      requestModel.userModel!.phoneNo = phoneNo.value.trim();
-      requestModel.userModel!.password = password.value.trim();
-      requestModel.userModel!.name = name.value.trim();
+    //   requestModel.userModel!.matrixId = matrixId.value.trim();
+    //   requestModel.userModel!.email = email.value.trim();
+    //   requestModel.userModel!.phoneNo = phoneNo.value.trim();
+    //   requestModel.userModel!.password = password.value.trim();
+    //   requestModel.userModel!.name = name.value.trim();
 
-      // Call API
-      DefaultResponseModel responseModel =
-          await userBloc.register(requestModel);
+    //   // Call API
+    //   DefaultResponseModel responseModel =
+    //       await userBloc.register(requestModel);
 
-      // Handle response
-      if (responseModel.isSuccess) {
-        emitSuccess(successResponse: email.value.trim());
-      } else {
-        emitFailure(failureResponse: responseModel.message);
-      }
-    } catch (e) {
-      emitFailure(failureResponse: e.toString());
-    }
+    //   // Handle response
+    //   if (responseModel.isSuccess) {
+    //     emitSuccess(successResponse: email.value.trim());
+    //   } else {
+    //     emitFailure(failureResponse: responseModel.message);
+    //   }
+    // } catch (e) {
+    //   emitFailure(failureResponse: e.toString());
+    // }
   }
 }
