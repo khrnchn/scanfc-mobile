@@ -1,23 +1,29 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:nfc_manager/nfc_manager.dart';
+import 'package:nfc_smart_attendance/bloc/class_bloc.dart';
 import 'package:nfc_smart_attendance/constant.dart';
 import 'package:im_animations/im_animations.dart';
 import 'package:animated_switcher_plus/animated_switcher_plus.dart';
 import 'package:nfc_smart_attendance/helpers/general_method.dart';
+import 'package:nfc_smart_attendance/models/default_response_model.dart';
 import 'package:nfc_smart_attendance/public_components/button_primary.dart';
+import 'package:nfc_smart_attendance/public_components/custom_dialog.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/screens/request_exemption/request_exemption_screen.dart';
 
 class FaceToFaceClassScreen extends StatefulWidget {
-  final String classMode;
   final bool isAttendanceSubmitted;
-  final Function(bool) updateAttendance;
+  final int classroomsId;
+  final Function() updateAttendance;
+  final String className;
   const FaceToFaceClassScreen({
     super.key,
-    required this.classMode,
     required this.isAttendanceSubmitted,
     required this.updateAttendance,
+    required this.className,
+    required this.classroomsId,
   });
 
   @override
@@ -32,12 +38,14 @@ class _FaceToFaceClassScreenState extends State<FaceToFaceClassScreen>
   late Animation<Offset> _offsetAnimation;
   bool _isVisible = true;
   bool isAttendanceSubmitted = false;
+  bool isLoading = false;
+  ClassBloc classBloc = ClassBloc();
 
   void submitAttendance() {
     setState(() {
       isAttendanceSubmitted = true;
     });
-    widget.updateAttendance(true);
+    widget.updateAttendance();
     print("update Attendance");
     Navigator.pop(context, isAttendanceSubmitted);
   }
@@ -85,7 +93,7 @@ class _FaceToFaceClassScreenState extends State<FaceToFaceClassScreen>
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "${widget.classMode} Class",
+          widget.className,
           style: TextStyle(
             color: kPrimaryColor,
             fontWeight: FontWeight.bold,
@@ -199,22 +207,22 @@ class _FaceToFaceClassScreenState extends State<FaceToFaceClassScreen>
                     ),
                     Space(10),
                     Text(
-                      "Scan your phone to the nfc reader\nat your lecturer table",
+                      "Scan your matric card to the nfc reader\nat your lecturer table and press attend class button",
                       style: TextStyle(
                         color: kPrimaryLight,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    Space(10),
+                    Space(20),
                     // buat comparison card uid from db dengan user model
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: ButtonPrimary(
                         "Attend Class",
-                        onPressed: () {
-                          widget.isAttendanceSubmitted
-                              ? null
-                              : submitAttendance();
+                        isLoading: isLoading,
+                        loadingText: "Please Wait...",
+                        onPressed: () async {
+                          await attendClass(context);
                         },
                       ),
                     ),
@@ -227,5 +235,38 @@ class _FaceToFaceClassScreenState extends State<FaceToFaceClassScreen>
         ),
       ),
     );
+  }
+
+  Future<void> attendClass(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+    DefaultResponseModel responseModel =
+        await classBloc.attendClass(widget.classroomsId);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (responseModel.isSuccess) {
+      // navigate back to class today screen
+      Navigator.pop(context);
+      widget.updateAttendance();
+    } else {
+      if (mounted) {
+        CustomDialog.show(
+          context,
+          isDissmissable: false,
+          icon: Iconsax.info_circle,
+          title:
+              "Attendance failed, Matric Card doesn't match. Please scan with your matric card",
+          btnOkText: "OK",
+          btnOkOnPress: () {
+            // matikan current dialog
+            Navigator.pop(context);
+          },
+        );
+      }
+    }
   }
 }

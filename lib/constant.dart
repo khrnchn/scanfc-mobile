@@ -55,3 +55,20 @@ class DialogType {
   static const int warning = 3;
   static const int success = 4;
 }
+
+class ClassTodayType {
+  static const int physical = 0;
+  static const int online = 1;
+}
+
+class AttendanceStatus {
+  static const String present = "Present";
+  static const String absent = "Absent";
+  static const String error = "Error";
+}
+
+class ExemptionStatus {
+  static const String needed = "Exemption needed";
+  static const String submitted = "Exemption submitted";
+  static const String error = "Error";
+}

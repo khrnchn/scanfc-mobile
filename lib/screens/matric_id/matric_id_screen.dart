@@ -256,7 +256,7 @@ class _MatricIDScreenState extends State<MatricIDScreen> {
           ),
           Space(30),
           Text(
-            userModel.name!,
+            "${getFirstTwoWords(userModel.name!)}",
             style: TextStyle(
               color: kPrimaryColor,
               fontWeight: FontWeight.bold,
@@ -275,6 +275,15 @@ class _MatricIDScreenState extends State<MatricIDScreen> {
         ],
       ),
     );
+  }
+
+  String getFirstTwoWords(String fullName) {
+    List<String> words = fullName.split(' ');
+    if (words.length <= 3) {
+      return words[0];
+    } else {
+      return '${words[0]} ${words[1]}';
+    }
   }
 
   Widget profileInformation(

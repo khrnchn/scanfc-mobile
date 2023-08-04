@@ -11,14 +11,16 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class OnlineClassScreen extends StatefulWidget {
-  final String classMode;
   final bool isAttendanceSubmitted;
-  final Function(bool) updateAttendance;
+  final int classroomsId;
+  final Function() updateAttendance;
+  final String className;
   const OnlineClassScreen(
       {super.key,
-      required this.classMode,
       required this.isAttendanceSubmitted,
-      required this.updateAttendance});
+      required this.updateAttendance,
+      required this.className,
+      required this.classroomsId});
 
   @override
   State<OnlineClassScreen> createState() => _OnlineClassScreenState();
@@ -31,14 +33,15 @@ class _OnlineClassScreenState extends State<OnlineClassScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   bool isAttendanceSubmitted = false;
+  bool isLoading = false;
 
   void submitAttendance() {
     setState(() {
       isAttendanceSubmitted = true;
     });
-    widget.updateAttendance(true);
+    widget.updateAttendance();
     print("update Attendance");
-    Navigator.pop(context, isAttendanceSubmitted);
+    Navigator.pop(context);
   }
 
   @override
@@ -106,7 +109,7 @@ class _OnlineClassScreenState extends State<OnlineClassScreen> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "${widget.classMode} Class",
+          widget.className,
           style: TextStyle(
             color: kPrimaryColor,
             fontWeight: FontWeight.bold,
@@ -137,6 +140,8 @@ class _OnlineClassScreenState extends State<OnlineClassScreen> {
                                   const EdgeInsets.symmetric(horizontal: 15),
                               child: ButtonPrimary(
                                 "Attend Class",
+                                isLoading: isLoading,
+                                loadingText: "Please Wait...",
                                 onPressed: () {
                                   widget.isAttendanceSubmitted
                                       ? null

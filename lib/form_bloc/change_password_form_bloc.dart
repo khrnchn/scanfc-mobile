@@ -38,7 +38,6 @@ class ChangePasswordFormBloc
   ChangePasswordFormBloc() {
     addFieldBlocs(fieldBlocs: [
       newPassword,
-      confirmPassword,
       currentPassword,
     ]);
 
@@ -53,7 +52,7 @@ class ChangePasswordFormBloc
       ChangePasswordRequestModel requestModel =
           new ChangePasswordRequestModel();
       requestModel.newPassword = newPassword.value;
-      requestModel.passwordConfirmation = confirmPassword.value;
+
       requestModel.currentPassword = currentPassword.value;
 
       DefaultResponseModel responseModel =
@@ -63,6 +62,7 @@ class ChangePasswordFormBloc
         emitSuccess(successResponse: responseModel.data);
       } else {
         emitFailure(failureResponse: responseModel.errors);
+        print(responseModel.message);
       }
     } catch (e) {
       emitFailure(failureResponse: null);

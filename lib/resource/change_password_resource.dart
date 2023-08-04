@@ -17,7 +17,7 @@ class ChangePasswordResource {
 
   static Resource updatePassword(ChangePasswordRequestModel requestModel) {
     return Resource(
-        url: 'change-password/update',
+        url: 'change_password',
         data: requestModel.toJson(),
         parse: (response) {
           return DefaultResponseModel(json.decode(response.body));

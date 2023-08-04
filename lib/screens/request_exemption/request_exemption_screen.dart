@@ -6,13 +6,15 @@ import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_pickers/image_pickers.dart';
 import 'package:nfc_smart_attendance/form_bloc/request_exemption_form_bloc.dart';
+import 'package:nfc_smart_attendance/models/attendance_history/attendance_history_model.dart';
 import 'package:nfc_smart_attendance/public_components/button_primary.dart';
 import 'package:nfc_smart_attendance/public_components/input_decoration.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/screens/request_exemption/components/file_uploader.dart';
 
 class RequestExemptionScreen extends StatefulWidget {
-  const RequestExemptionScreen({super.key});
+  final AttendanceHistoryModel attendanceHistoryModel;
+  const RequestExemptionScreen({super.key, required this.attendanceHistoryModel});
 
   @override
   State<RequestExemptionScreen> createState() => _RequestExemptionScreenState();

@@ -1,14 +1,18 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nfc_smart_attendance/constant.dart';
 import 'package:nfc_smart_attendance/form_bloc/change_password_form_bloc.dart';
+import 'package:nfc_smart_attendance/helpers/secure_storage_api.dart';
 import 'package:nfc_smart_attendance/models/user/validate_password_response_model.dart';
 import 'package:nfc_smart_attendance/providers/user_data_notifier.dart';
 import 'package:nfc_smart_attendance/public_components/button_primary.dart';
 import 'package:nfc_smart_attendance/public_components/input_decoration.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
+import 'package:nfc_smart_attendance/public_components/theme_snack_bar.dart';
+import 'package:nfc_smart_attendance/screens/sign_in/sign_in_screen.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -46,7 +50,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     _isLoading = true;
                   });
                 },
-                onSuccess: (context, state) {
+                onSuccess: (context, state) async {
                   // Set loading false
                   setState(() {
                     _isLoading = false;
@@ -56,8 +60,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   final UserDataNotifier userDataNotifier =
                       Provider.of<UserDataNotifier>(context, listen: false);
 
-                  // Navigate to profile screen
-                  Navigator.of(context).pop();
+                  await GetIt.instance.reset();
+                  await SecureStorageApi.delete(key: "access_token");
+
+                  // Navigate to Sign In Screen
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => SignInScreen()),
+                      (Route<dynamic> route) => false);
+
+                  ThemeSnackBar.showSnackBar(context, "You're logged out.");
                 },
                 // Validation failed
                 onSubmissionFailed: (context, state) {
@@ -97,7 +108,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         keyboardType: TextInputType.name,
                         cursorColor: kPrimaryColor,
                         decoration: textFieldInputDecoration(
-                          "Cuurent Password",
+                          "Current Password",
                           hintText: "Enter your current password",
                           prefixIcon: const Icon(
                             Iconsax.lock,
@@ -131,51 +142,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 10),
                     DelayedDisplay(
                       delay: Duration(milliseconds: delayAnimationDuration),
-                      child: TextFieldBlocBuilder(
-                        suffixButton: SuffixButton.obscureText,
-                        obscureTextFalseIcon: const Icon(
-                          Iconsax.eye,
-                          color: kGrey,
-                        ),
-                        obscureTextTrueIcon: const Icon(
-                          Iconsax.eye_slash,
-                          color: kGrey,
-                        ),
-                        textFieldBloc: formBloc.newPassword,
-                        keyboardType: TextInputType.name,
-                        cursorColor: kPrimaryColor,
-                        decoration: textFieldInputDecoration(
-                          "Confirm Password",
-                          hintText: "Enter your confirm password",
-                          prefixIcon: const Icon(
-                            Iconsax.lock,
-                            color: kPrimaryColor,
-                          ),
+                      child: const Text(
+                        "You'll be automatically log out after change your password",
+                        style: TextStyle(
+                          color: kPrimaryColor,
                         ),
                       ),
                     ),
-                    SizedBox(height: 380),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 2,
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: DelayedDisplay(
-                            delay:
-                                Duration(milliseconds: delayAnimationDuration),
-                            child: ButtonPrimary(
-                              "Update", onPressed: () => formBloc.submit(),
-                              loadingText: "Updating...",
-                              isLoading: _isLoading,
-                              //Navigator.pop(context);
-                            ),
-                          ),
-                        ),
-                      ],
+                    SizedBox(height: 20),
+                    DelayedDisplay(
+                      delay: Duration(milliseconds: delayAnimationDuration),
+                      child: ButtonPrimary(
+                        "Update", onPressed: () => formBloc.submit(),
+                        loadingText: "Updating...",
+                        isLoading: _isLoading,
+                        //Navigator.pop(context);
+                      ),
                     ),
                   ],
                 ),

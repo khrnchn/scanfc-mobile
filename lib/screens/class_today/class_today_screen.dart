@@ -28,7 +28,7 @@ class ClassTodayScreen extends StatefulWidget {
 class _ClassTodayScreenState extends State<ClassTodayScreen> {
   ClassBloc classBloc = ClassBloc();
   static const _pageSize = 30;
-  final PagingController<int, ClassTodayModel> _nursePagingController =
+  final PagingController<int, ClassTodayModel> _classTodayPagingController =
       PagingController(firstPageKey: 1);
 
   // For refresher
@@ -38,7 +38,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
   void _onRefresh() async {
     // monitor network fetch
 
-    _nursePagingController.refresh();
+    _classTodayPagingController.refresh();
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
@@ -56,29 +56,36 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
         // Compare the lenght with the page size to know either already last page or not
         final isLastPage = listClassTodayModel.length < _pageSize;
         if (isLastPage) {
-          _nursePagingController.appendLastPage(listClassTodayModel);
+          _classTodayPagingController.appendLastPage(listClassTodayModel);
         } else {
           final nextPageKey = pageKey + listClassTodayModel.length;
-          _nursePagingController.appendPage(listClassTodayModel, nextPageKey);
+          _classTodayPagingController.appendPage(
+              listClassTodayModel, nextPageKey);
         }
       } else {
-        _nursePagingController.error = response.message;
+        _classTodayPagingController.error = response.message;
         print(response.message);
       }
     } catch (error) {
-      _nursePagingController.error = "Server Error";
+      _classTodayPagingController.error = "Server Error";
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _classTodayPagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+  }
+
   int delayAnimationDuration = 100;
-  String classMode = "Face to Face"; // change to Online
+  int classMode = ClassTodayType.physical; // change to Online
 
   bool isAttendanceSubmitted = false;
 
-  void updateAttendance(bool submitted) {
-    setState(() {
-      isAttendanceSubmitted = submitted;
-    });
+  void updateAttendance() {
+    _onRefresh();
   }
 
   @override
@@ -92,25 +99,26 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
       child: CustomScrollView(
         slivers: <Widget>[
           PagedSliverList<int, ClassTodayModel>(
-            pagingController: _nursePagingController,
+            pagingController: _classTodayPagingController,
             builderDelegate: PagedChildBuilderDelegate<ClassTodayModel>(
-                firstPageProgressIndicatorBuilder: (context) {
-                  return ThemeSpinner.spinner();
-                },
-                newPageProgressIndicatorBuilder: (context) {
-                  return ThemeSpinner.spinner();
-                },
-                noItemsFoundIndicatorBuilder: (context) => const EmptyList(
-                      icon: Iconsax.people,
-                      title: "No Nurse History ",
-                      subtitle: "No new nurse history available",
-                      query: '',
-                    ),
-                animateTransitions: true,
-                itemBuilder: (context, classTodayModel, index) {
-                  return classTodayItem(
-                      context: context, classTodayModel: classTodayModel);
-                },),
+              firstPageProgressIndicatorBuilder: (context) {
+                return ThemeSpinner.spinner();
+              },
+              newPageProgressIndicatorBuilder: (context) {
+                return ThemeSpinner.spinner();
+              },
+              noItemsFoundIndicatorBuilder: (context) => const EmptyList(
+                icon: Icons.menu_book,
+                title: "No Class Today ",
+                subtitle: "Today have no class",
+                query: '',
+              ),
+              animateTransitions: true,
+              itemBuilder: (context, classTodayModel, index) {
+                return classTodayItem(
+                    context: context, classTodayModel: classTodayModel);
+              },
+            ),
           )
         ],
       ),
@@ -129,17 +137,27 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return classMode != "Online"
-                    ? OnlineClassScreen(
-                        classMode: classMode,
-                        isAttendanceSubmitted: isAttendanceSubmitted,
-                        updateAttendance: updateAttendance,
-                      )
-                    : FaceToFaceClassScreen(
-                        classMode: classMode,
-                        isAttendanceSubmitted: isAttendanceSubmitted,
-                        updateAttendance: updateAttendance,
-                      );
+                if (classTodayModel.classroomType == ClassTodayType.online) {
+                  return OnlineClassScreen(
+                    classroomsId: classTodayModel.id!,
+                    className:
+                        "${classTodayModel.section!.subject!.code} (${classTodayModel.classroomName})",
+                    isAttendanceSubmitted: isAttendanceSubmitted,
+                    updateAttendance: updateAttendance,
+                  );
+                } else if (classTodayModel.classroomType ==
+                    ClassTodayType.physical) {
+                  return FaceToFaceClassScreen(
+                    classroomsId: classTodayModel.id!,
+                    className:
+                        "${classTodayModel.section!.subject!.code} (${classTodayModel.classroomName})",
+                    isAttendanceSubmitted: isAttendanceSubmitted,
+                    updateAttendance: updateAttendance,
+                  );
+                } else {
+                  throw ArgumentError(
+                      "Invalid class type: ${classTodayModel.classroomType}");
+                }
               },
             ),
           );
@@ -172,17 +190,24 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                   children: [
                     Row(
                       children: [
-                        faceToFaceBadge(),
-                        if (isAttendanceSubmitted)
-                          attendanceSubmittedBadge()
-                        else
-                          attendanceNotSubmittedBadge(),
+                        classTodayModel.classroomType == ClassTodayType.physical
+                            ? faceToFaceBadge()
+                            : (classTodayModel.classroomType ==
+                                    ClassTodayType.online
+                                ? onlineClassBadge()
+                                : SizedBox()),
+                        classTodayModel.attendanceStatus ==
+                                AttendanceStatus.present
+                            ? attendanceSubmittedBadge()
+                            : (classTodayModel.attendanceStatus ==
+                                    AttendanceStatus.absent
+                                ? attendanceNotSubmittedBadge()
+                                : SizedBox()),
                       ],
                     ),
-                    onlineClassBadge(),
                     Space(10),
                     Text(
-                      "ISP641",
+                      "${classTodayModel.section!.subject!.code} (${classTodayModel.classroomName})",
                       style: TextStyle(
                         color: kPrimaryColor,
                         fontWeight: FontWeight.bold,
@@ -190,7 +215,31 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                     ),
                     Space(3),
                     Text(
-                      "E Commerce Application",
+                      classTodayModel.section!.subjectName!,
+                      style: TextStyle(
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Space(3),
+                    Text(
+                      classTodayModel.venueName!,
+                      style: TextStyle(
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Space(3),
+                    Text(
+                      classTodayModel.sectionName!,
+                      style: TextStyle(
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Space(3),
+                    Text(
+                      "Lecturer: ${classTodayModel.section!.lecturerName!}",
                       style: TextStyle(
                         color: kPrimaryColor,
                         fontWeight: FontWeight.bold,
@@ -198,12 +247,19 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                     ),
                     Space(10),
                     Text(
-                      "26 March 2023 | 4.00pm",
+                      "Start at : ${formatDate(classTodayModel.startAt!)}",
                       style: TextStyle(
                         color: kPrimaryLight,
                         fontSize: 11,
                       ),
-                    )
+                    ),
+                    Text(
+                      "End at   : ${formatDate(classTodayModel.endAt!)}",
+                      style: TextStyle(
+                        color: kPrimaryLight,
+                        fontSize: 11,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -212,5 +268,38 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
         ),
       ),
     );
+  }
+
+  String formatDate(String inputDate) {
+    DateTime dateTime = DateTime.parse(inputDate);
+
+    String day = dateTime.day.toString();
+    String month = getMonthName(dateTime.month);
+    String year = dateTime.year.toString();
+
+    String hour = (dateTime.hour % 12).toString();
+    String minute = dateTime.minute.toString().padLeft(2, '0');
+    String amPm = dateTime.hour < 12 ? 'am' : 'pm';
+
+    return '$day $month $year | $hour.$minute$amPm';
+  }
+
+  String getMonthName(int month) {
+    List<String> monthNames = [
+      '',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return monthNames[month];
   }
 }
