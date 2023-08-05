@@ -11,8 +11,12 @@ import 'package:file_picker/file_picker.dart';
 class UploadFile extends StatefulWidget {
   final Function(XFile) onFileSelected;
   final RequestExemptionFormBloc formBloc;
+  final String? attendanceStatus;
   const UploadFile(
-      {super.key, required this.onFileSelected, required this.formBloc});
+      {super.key,
+      required this.onFileSelected,
+      required this.formBloc,
+      this.attendanceStatus});
 
   @override
   State<UploadFile> createState() => _InputPassportPhotoState();
@@ -33,7 +37,7 @@ class _InputPassportPhotoState extends State<UploadFile> {
     try {
       FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['pdf', 'png', 'jpeg', 'jpg'],
+        allowedExtensions: ['png', 'jpeg', 'jpg'],
       );
 
       if (pickedFile != null) {
@@ -111,9 +115,11 @@ class _InputPassportPhotoState extends State<UploadFile> {
           child: UploadButton(
             icon: Icons.upload,
             title: "Upload",
-            onPressed: () async {
-              _selectAndUploadImage();
-            },
+            onPressed: widget.attendanceStatus == AttendanceStatus.present
+                ? () {}
+                : () async {
+                    _selectAndUploadImage();
+                  },
           ),
         ),
       ],

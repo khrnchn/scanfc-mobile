@@ -14,7 +14,8 @@ import 'package:nfc_smart_attendance/screens/request_exemption/components/file_u
 
 class RequestExemptionScreen extends StatefulWidget {
   final AttendanceHistoryModel attendanceHistoryModel;
-  const RequestExemptionScreen({super.key, required this.attendanceHistoryModel});
+  const RequestExemptionScreen(
+      {super.key, required this.attendanceHistoryModel});
 
   @override
   State<RequestExemptionScreen> createState() => _RequestExemptionScreenState();
@@ -59,6 +60,7 @@ class _RequestExemptionScreenState extends State<RequestExemptionScreen> {
                     delay: Duration(milliseconds: delayAnimationDuration),
                     child: UploadFile(
                       formBloc: requestExemptionFormBloc,
+                      attendanceStatus: widget.attendanceHistoryModel.attendanceStatus,
                       onFileSelected: (XFile selectedFile) {
                         setState(() {
                           _selectedFile = selectedFile;
@@ -70,7 +72,7 @@ class _RequestExemptionScreenState extends State<RequestExemptionScreen> {
                   DelayedDisplay(
                     delay: Duration(milliseconds: delayAnimationDuration),
                     child: const Text(
-                      "Please upload your exemption proof. The format can be in 'pdf', 'png', 'jpeg', 'jpg'. ",
+                      "Please upload your exemption proof. The format can be in 'png', 'jpeg', 'jpg'. ",
                       style: TextStyle(
                         color: kSecondaryColor,
                         fontSize: 12,
@@ -81,6 +83,11 @@ class _RequestExemptionScreenState extends State<RequestExemptionScreen> {
                   DelayedDisplay(
                     delay: Duration(milliseconds: delayAnimationDuration),
                     child: TextFieldBlocBuilder(
+                      isEnabled:
+                          widget.attendanceHistoryModel.attendanceStatus ==
+                                  AttendanceStatus.present
+                              ? false
+                              : true,
                       maxLines: 8,
                       textFieldBloc: requestExemptionFormBloc.remarks,
                       keyboardType: TextInputType.multiline,
@@ -100,9 +107,16 @@ class _RequestExemptionScreenState extends State<RequestExemptionScreen> {
           padding: const EdgeInsets.all(15),
           child: DelayedDisplay(
             delay: Duration(milliseconds: delayAnimationDuration),
-            child: ButtonPrimary("Submit Exemption", onPressed: () {
-              print("submit exemption");
-            }),
+            child: ButtonPrimary(
+              "Submit Exemption",
+              isDisabled: widget.attendanceHistoryModel.attendanceStatus ==
+                      AttendanceStatus.present
+                  ? true
+                  : false,
+              onPressed: () {
+                print("submit exemption");
+              },
+            ),
           ),
         ),
       ),

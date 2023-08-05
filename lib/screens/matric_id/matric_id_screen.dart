@@ -254,7 +254,7 @@ class _MatricIDScreenState extends State<MatricIDScreen> {
             width: 120,
             height: 120,
           ),
-          Space(30),
+          Space(10),
           Text(
             "${getFirstTwoWords(userModel.name!)}",
             style: TextStyle(

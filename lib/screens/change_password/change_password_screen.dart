@@ -9,6 +9,7 @@ import 'package:nfc_smart_attendance/helpers/secure_storage_api.dart';
 import 'package:nfc_smart_attendance/models/user/validate_password_response_model.dart';
 import 'package:nfc_smart_attendance/providers/user_data_notifier.dart';
 import 'package:nfc_smart_attendance/public_components/button_primary.dart';
+import 'package:nfc_smart_attendance/public_components/custom_dialog.dart';
 import 'package:nfc_smart_attendance/public_components/input_decoration.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/public_components/theme_snack_bar.dart';
@@ -56,19 +57,29 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     _isLoading = false;
                   });
 
-                  // Declare notifier
-                  final UserDataNotifier userDataNotifier =
-                      Provider.of<UserDataNotifier>(context, listen: false);
+                  CustomDialog.show(
+                    context,
+                    isDissmissable: false,
+                    icon: Iconsax.tick_circle,
+                    title: "Successfully change password",
+                    btnOkText: "OK",
+                    btnOkOnPress: () async {
+                      // Declare notifier
+                      final UserDataNotifier userDataNotifier =
+                          Provider.of<UserDataNotifier>(context, listen: false);
 
-                  await GetIt.instance.reset();
-                  await SecureStorageApi.delete(key: "access_token");
+                      await GetIt.instance.reset();
+                      await SecureStorageApi.delete(key: "access_token");
 
-                  // Navigate to Sign In Screen
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => SignInScreen()),
-                      (Route<dynamic> route) => false);
+                      // Navigate to Sign In Screen
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => SignInScreen()),
+                          (Route<dynamic> route) => false);
 
-                  ThemeSnackBar.showSnackBar(context, "You're logged out.");
+                      ThemeSnackBar.showSnackBar(context, "You're logged out.");
+                    },
+                  );
                 },
                 // Validation failed
                 onSubmissionFailed: (context, state) {
