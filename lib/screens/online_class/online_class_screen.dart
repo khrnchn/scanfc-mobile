@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:nfc_smart_attendance/bloc/class_bloc.dart';
 import 'package:nfc_smart_attendance/constant.dart';
 import 'package:nfc_smart_attendance/helpers/general_method.dart';
+import 'package:nfc_smart_attendance/models/attend_online_class/attend_online_class_request_model.dart';
+import 'package:nfc_smart_attendance/models/class_today/class_today_model.dart';
+import 'package:nfc_smart_attendance/models/default_response_model.dart';
 import 'package:nfc_smart_attendance/public_components/button_primary.dart';
+import 'package:nfc_smart_attendance/public_components/custom_dialog.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/screens/request_exemption/request_exemption_screen.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -11,16 +17,15 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class OnlineClassScreen extends StatefulWidget {
-  final bool isAttendanceSubmitted;
   final int classroomsId;
   final Function() updateAttendance;
   final String className;
-  const OnlineClassScreen(
-      {super.key,
-      required this.isAttendanceSubmitted,
-      required this.updateAttendance,
-      required this.className,
-      required this.classroomsId});
+  const OnlineClassScreen({
+    super.key,
+    required this.updateAttendance,
+    required this.className,
+    required this.classroomsId,
+  });
 
   @override
   State<OnlineClassScreen> createState() => _OnlineClassScreenState();
@@ -96,10 +101,19 @@ class _OnlineClassScreenState extends State<OnlineClassScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.classroomsId);
+  }
+
+  @override
   void dispose() {
     controller?.dispose();
     super.dispose();
   }
+
+  ClassBloc classBloc = ClassBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -129,12 +143,15 @@ class _OnlineClassScreenState extends State<OnlineClassScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        'Data: ${result!.code}',
+                        'Classroom ID: ${result!.code}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      (result!.code != "Attendance QR Code is expired")
+
+                      // widget.classtoomId = route
+                      // result!.code = requestModel
+                      (result!.code == widget.classroomsId.toString())
                           ? Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
@@ -142,10 +159,8 @@ class _OnlineClassScreenState extends State<OnlineClassScreen> {
                                 "Attend Class",
                                 isLoading: isLoading,
                                 loadingText: "Please Wait...",
-                                onPressed: () {
-                                  widget.isAttendanceSubmitted
-                                      ? null
-                                      : submitAttendance();
+                                onPressed: () async {
+                                  await attendOnlineClass(context);
                                 },
                               ),
                             )
@@ -172,5 +187,67 @@ class _OnlineClassScreenState extends State<OnlineClassScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> attendOnlineClass(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+    DefaultResponseModel responseModel = await classBloc.attendOnlineClass(
+      widget.classroomsId,
+      AttendOnlineClassRequestModel(classroomId: result!.code!),
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (responseModel.isSuccess == true && responseModel.errors == null) {
+      if (mounted) {
+        CustomDialog.show(
+          context,
+          isDissmissable: false,
+          icon: Iconsax.tick_circle,
+          title: responseModel.message,
+          btnOkText: "OK",
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            widget.updateAttendance();
+          },
+        );
+      }
+    } else if (responseModel.isSuccess == false &&
+        responseModel.errors == null) {
+      if (mounted) {
+        CustomDialog.show(
+          context,
+          isDissmissable: false,
+          icon: Iconsax.tick_circle,
+          title: responseModel.message,
+          btnOkText: "OK",
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            widget.updateAttendance();
+          },
+        );
+      }
+    } else {
+      if (mounted) {
+        CustomDialog.show(
+          context,
+          isDissmissable: false,
+          icon: Iconsax.tick_circle,
+          title: responseModel.message,
+          btnOkText: "OK",
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            widget.updateAttendance();
+          },
+        );
+      }
+    }
   }
 }

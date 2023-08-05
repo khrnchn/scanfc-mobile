@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:nfc_smart_attendance/models/attend_online_class/attend_online_class_request_model.dart';
 import 'package:nfc_smart_attendance/models/attendance_history/list_attendance_history_response_model.dart';
 import 'package:nfc_smart_attendance/models/class_today/list_class_today_response_model.dart';
 import 'package:nfc_smart_attendance/models/default_response_model.dart';
@@ -24,6 +25,14 @@ class ClassResource {
   static Resource attendClass(int classRoomsId) {
     return Resource(
         url: 'classrooms/$classRoomsId/attend_class',
+        parse: (response) {
+          return DefaultResponseModel(json.decode(response.body));
+        });
+  }
+  static Resource attendOnlineClass(int classRoomsId, AttendOnlineClassRequestModel requestModel) {
+    return Resource(
+        url: 'classrooms/$classRoomsId/attend_online_class',
+        data: requestModel.toJson(),
         parse: (response) {
           return DefaultResponseModel(json.decode(response.body));
         });

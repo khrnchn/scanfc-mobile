@@ -1,3 +1,4 @@
+import 'package:nfc_smart_attendance/models/attend_online_class/attend_online_class_request_model.dart';
 import 'package:nfc_smart_attendance/models/attendance_history/list_attendance_history_response_model.dart';
 import 'package:nfc_smart_attendance/models/class_today/list_class_today_response_model.dart';
 import 'package:nfc_smart_attendance/models/default_response_model.dart';
@@ -16,6 +17,12 @@ class ClassBloc {
 
   Future<DefaultResponseModel> attendClass(int classRoomsId) async {
     return await Webservice.post(ClassResource.attendClass(classRoomsId));
+  }
+
+  Future<DefaultResponseModel> attendOnlineClass(
+      int classRoomsId, AttendOnlineClassRequestModel requestModel) async {
+    return await Webservice.post(
+        ClassResource.attendOnlineClass(classRoomsId, requestModel));
   }
 
   Future<DefaultResponseModel> requestExemption(

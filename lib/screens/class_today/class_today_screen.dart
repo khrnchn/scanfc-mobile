@@ -156,7 +156,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                     classroomsId: classTodayModel.id!,
                     className:
                         "${classTodayModel.section!.subject!.code} (${classTodayModel.classroomName})",
-                    isAttendanceSubmitted: isAttendanceSubmitted,
+                    
                     updateAttendance: updateAttendance,
                   );
                 },
