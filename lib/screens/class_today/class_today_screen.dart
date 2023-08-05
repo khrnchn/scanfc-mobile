@@ -2,12 +2,14 @@ import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nfc_smart_attendance/bloc/class_bloc.dart';
+import 'package:nfc_smart_attendance/bloc/user_bloc.dart';
 import 'package:nfc_smart_attendance/constant.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:nfc_smart_attendance/helpers/general_method.dart';
 import 'package:nfc_smart_attendance/helpers/http_response.dart';
 import 'package:nfc_smart_attendance/models/class_today/class_today_model.dart';
 import 'package:nfc_smart_attendance/models/class_today/list_class_today_response_model.dart';
+import 'package:nfc_smart_attendance/models/user/user_model.dart';
 import 'package:nfc_smart_attendance/public_components/empty_list.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/public_components/status_badges.dart';
@@ -28,6 +30,8 @@ class ClassTodayScreen extends StatefulWidget {
 
 class _ClassTodayScreenState extends State<ClassTodayScreen> {
   ClassBloc classBloc = ClassBloc();
+  late Future<UserModel?> _userModel;
+  UserBloc userBloc = UserBloc();
   static const _pageSize = 30;
   final PagingController<int, ClassTodayModel> _classTodayPagingController =
       PagingController(firstPageKey: 1);
@@ -156,7 +160,6 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                     classroomsId: classTodayModel.id!,
                     className:
                         "${classTodayModel.section!.subject!.code} (${classTodayModel.classroomName})",
-                    
                     updateAttendance: updateAttendance,
                   );
                 },
@@ -192,6 +195,9 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                                 ClassTodayType.online
                             ? onlineClassBadge()
                             : SizedBox()),
+
+
+                            
                     classTodayModel.attendanceStatus ==
                                 AttendanceStatus.present ||
                             classTodayModel.attendanceStatus ==
@@ -271,6 +277,9 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
     String year = dateTime.year.toString();
 
     String hour = (dateTime.hour % 12).toString();
+    if (hour == "0") {
+      hour = "12"; // Fix for 12am
+    }
     String minute = dateTime.minute.toString().padLeft(2, '0');
     String amPm = dateTime.hour < 12 ? 'am' : 'pm';
 

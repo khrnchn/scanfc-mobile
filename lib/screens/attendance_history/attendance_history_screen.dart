@@ -250,6 +250,9 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
     String year = dateTime.year.toString();
 
     String hour = (dateTime.hour % 12).toString();
+    if (hour == "0") {
+      hour = "12"; // Fix for 12am
+    }
     String minute = dateTime.minute.toString().padLeft(2, '0');
     String amPm = dateTime.hour < 12 ? 'am' : 'pm';
 

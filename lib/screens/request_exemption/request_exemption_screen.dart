@@ -173,6 +173,8 @@ class _RequestExemptionScreenState extends State<RequestExemptionScreen> {
                           delay: Duration(milliseconds: delayAnimationDuration),
                           child: ButtonPrimary(
                             "Submit Exemption",
+                            isLoading: _isLoading,
+                            loadingText: "Submitting",
                             isDisabled: widget.attendanceHistoryModel
                                         .attendanceStatus ==
                                     AttendanceStatus.present

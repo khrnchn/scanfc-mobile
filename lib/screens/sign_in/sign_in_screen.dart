@@ -259,37 +259,37 @@ class _SignInScreenState extends State<SignInScreen> {
               //   loadingText: "Signing you in...",
               // ),
 
-              GestureDetector(
-                onTap: () {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  // Navigator.push(context, route)
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Don't have an account?"),
-                    SizedBox(width: 0),
-                    GestureDetector(
-                        onTap: () {
-                          print("navigate to sign up screen");
-                          navigateTo(context, SignUpScreen());
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 5, right: 20, top: 20, bottom: 20),
-                          child: RichText(
-                            text: const TextSpan(
-                              text: "Sign Up",
-                              style: TextStyle(
-                                color: kPrimaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-              )
+              // GestureDetector(
+              //   onTap: () {
+              //     ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              //     // Navigator.push(context, route)
+              //   },
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Text("Don't have an account?"),
+              //       SizedBox(width: 0),
+              //       GestureDetector(
+              //           onTap: () {
+              //             print("navigate to sign up screen");
+              //             navigateTo(context, SignUpScreen());
+              //           },
+              //           child: Padding(
+              //             padding: const EdgeInsets.only(
+              //                 left: 5, right: 20, top: 20, bottom: 20),
+              //             child: RichText(
+              //               text: const TextSpan(
+              //                 text: "Sign Up",
+              //                 style: TextStyle(
+              //                   color: kPrimaryColor,
+              //                   fontWeight: FontWeight.bold,
+              //                 ),
+              //               ),
+              //             ),
+              //           )),
+              //     ],
+              //   ),
+              // )
             ],
           ),
         );
