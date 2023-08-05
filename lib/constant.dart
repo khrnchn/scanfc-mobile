@@ -57,8 +57,8 @@ class DialogType {
 }
 
 class ClassTodayType {
-  static const int physical = 0;
-  static const int online = 1;
+  static const int physical = 1;
+  static const int online = 2;
 }
 
 class AttendanceStatus {

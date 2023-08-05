@@ -130,7 +130,7 @@ Widget onlineClassBadge() {
   );
 }
 
-Widget attendanceSubmittedBadge() {
+Widget attendanceRecordedBadge() {
   return Container(
     margin: EdgeInsets.only(left: 5),
     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
@@ -140,7 +140,7 @@ Widget attendanceSubmittedBadge() {
       borderRadius: BorderRadius.circular(5),
     ),
     child: const Text(
-      "Attendance Submitted",
+      "Attendance Recorded",
       style: TextStyle(
         color: kTextInfo,
         fontSize: 11,
@@ -149,7 +149,7 @@ Widget attendanceSubmittedBadge() {
   );
 }
 
-Widget attendanceNotSubmittedBadge() {
+Widget attendanceNotRecordedBadge() {
   return Container(
     margin: EdgeInsets.only(left: 5),
     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
@@ -159,7 +159,7 @@ Widget attendanceNotSubmittedBadge() {
       borderRadius: BorderRadius.circular(5),
     ),
     child: const Text(
-      "Attendance Not Submitted",
+      "Attendance Not Recorded",
       style: TextStyle(
         color: kTextDanger,
         fontSize: 11,

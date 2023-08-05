@@ -23,7 +23,7 @@ class UploadFile extends StatefulWidget {
 }
 
 class _InputPassportPhotoState extends State<UploadFile> {
-  String filePlaceHolderName = "Exemption File Proof";
+  String filePlaceHolderName = "Exemption Image Proof";
   XFile? _selectedFile;
 
   Future<void> _selectAndUploadImage() async {

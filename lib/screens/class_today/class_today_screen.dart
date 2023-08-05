@@ -11,6 +11,7 @@ import 'package:nfc_smart_attendance/models/class_today/list_class_today_respons
 import 'package:nfc_smart_attendance/public_components/empty_list.dart';
 import 'package:nfc_smart_attendance/public_components/space.dart';
 import 'package:nfc_smart_attendance/public_components/status_badges.dart';
+import 'package:nfc_smart_attendance/public_components/theme_snack_bar.dart';
 import 'package:nfc_smart_attendance/public_components/theme_spinner.dart';
 import 'package:nfc_smart_attendance/screens/face_to_face_class/face_to_face_class_screen.dart';
 import 'package:nfc_smart_attendance/screens/online_class/online_class_screen.dart';
@@ -131,13 +132,26 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
     return DelayedDisplay(
       delay: Duration(milliseconds: delayAnimationDuration),
       child: ScaleTap(
-        onPressed: () async {
-          print("navigate to scan nfc");
-          var result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                if (classTodayModel.classroomType == ClassTodayType.online) {
+        onPressed: () {
+          if (classTodayModel.classroomType == ClassTodayType.physical &&
+              classTodayModel.attendanceStatus == AttendanceStatus.error) {
+            ThemeSnackBar.showSnackBar(
+              context,
+              "Please scan your matric card to your lecturer to submit attendance",
+            );
+          } else if (classTodayModel.attendanceStatus !=
+              AttendanceStatus.error) {
+            ThemeSnackBar.showSnackBar(
+              context,
+              "Attendance has been recorded",
+            );
+          } else if (classTodayModel.classroomType == ClassTodayType.online &&
+              classTodayModel.attendanceStatus == AttendanceStatus.error) {
+            print("navigate to online class screen");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
                   return OnlineClassScreen(
                     classroomsId: classTodayModel.id!,
                     className:
@@ -145,27 +159,11 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                     isAttendanceSubmitted: isAttendanceSubmitted,
                     updateAttendance: updateAttendance,
                   );
-                } else if (classTodayModel.classroomType ==
-                    ClassTodayType.physical) {
-                  return FaceToFaceClassScreen(
-                    classroomsId: classTodayModel.id!,
-                    className:
-                        "${classTodayModel.section!.subject!.code} (${classTodayModel.classroomName})",
-                    isAttendanceSubmitted: isAttendanceSubmitted,
-                    updateAttendance: updateAttendance,
-                  );
-                } else {
-                  throw ArgumentError(
-                      "Invalid class type: ${classTodayModel.classroomType}");
-                }
-              },
-            ),
-          );
-
-          if (result != null && result is bool) {
-            setState(() {
-              isAttendanceSubmitted = result;
-            });
+                },
+              ),
+            );
+          } else {
+            ThemeSnackBar.showSnackBar(context, "Class type error");
           }
         },
         child: Padding(
@@ -183,84 +181,79 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                 ),
               ],
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        classTodayModel.classroomType == ClassTodayType.physical
-                            ? faceToFaceBadge()
-                            : (classTodayModel.classroomType ==
-                                    ClassTodayType.online
-                                ? onlineClassBadge()
-                                : SizedBox()),
-                        classTodayModel.attendanceStatus ==
-                                AttendanceStatus.present
-                            ? attendanceSubmittedBadge()
-                            : (classTodayModel.attendanceStatus ==
-                                    AttendanceStatus.absent
-                                ? attendanceNotSubmittedBadge()
-                                : SizedBox()),
-                      ],
-                    ),
-                    Space(10),
-                    Text(
-                      "${classTodayModel.section!.subject!.code} (${classTodayModel.classroomName})",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Space(3),
-                    Text(
-                      classTodayModel.section!.subjectName!,
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Space(3),
-                    Text(
-                      classTodayModel.venueName!,
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Space(3),
-                    Text(
-                      classTodayModel.sectionName!,
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Space(3),
-                    Text(
-                      "Lecturer: ${classTodayModel.section!.lecturerName!}",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Space(10),
-                    Text(
-                      "Start at : ${formatDate(classTodayModel.startAt!)}",
-                      style: TextStyle(
-                        color: kPrimaryLight,
-                        fontSize: 11,
-                      ),
-                    ),
-                    Text(
-                      "End at   : ${formatDate(classTodayModel.endAt!)}",
-                      style: TextStyle(
-                        color: kPrimaryLight,
-                        fontSize: 11,
-                      ),
-                    ),
+                    classTodayModel.classroomType == ClassTodayType.physical
+                        ? faceToFaceBadge()
+                        : (classTodayModel.classroomType ==
+                                ClassTodayType.online
+                            ? onlineClassBadge()
+                            : SizedBox()),
+                    classTodayModel.attendanceStatus ==
+                                AttendanceStatus.present ||
+                            classTodayModel.attendanceStatus ==
+                                AttendanceStatus.absent
+                        ? attendanceRecordedBadge()
+                        : attendanceNotRecordedBadge(),
                   ],
+                ),
+                Space(10),
+                Text(
+                  "${classTodayModel.section!.subject!.code} (${classTodayModel.classroomName})",
+                  style: TextStyle(
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Space(3),
+                Text(
+                  classTodayModel.section!.subjectName!,
+                  style: TextStyle(
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Space(3),
+                Text(
+                  classTodayModel.venueName!,
+                  style: TextStyle(
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Space(3),
+                Text(
+                  classTodayModel.sectionName!,
+                  style: TextStyle(
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Space(3),
+                Text(
+                  "Lecturer: ${classTodayModel.section!.lecturerName!}",
+                  style: TextStyle(
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Space(10),
+                Text(
+                  "Start at : ${formatDate(classTodayModel.startAt!)}",
+                  style: TextStyle(
+                    color: kPrimaryLight,
+                    fontSize: 11,
+                  ),
+                ),
+                Text(
+                  "End at   : ${formatDate(classTodayModel.endAt!)}",
+                  style: TextStyle(
+                    color: kPrimaryLight,
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:nfc_smart_attendance/models/request_exemption/request_exemption_request_model.dart';
 import 'package:nfc_smart_attendance/services/resource.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nfc_smart_attendance/constant.dart';
@@ -82,6 +83,38 @@ class Webservice {
         'Authorization': 'Bearer $token',
       },
     );
+    return resource.parse(response);
+  }
+
+    static Future requestExemption(
+      Resource resource, RequestExemptionRequestModel requestModel, int id) async {
+    // To authenticate user
+    String? token = await SecureStorageApi.read(key: "access_token");
+
+    var headers = {
+      //To only accept json response from server
+      'Accept': 'application/json',
+      // User Authorization
+      'Authorization': 'Bearer $token',
+    };
+
+    var request =
+        http.MultipartRequest('POST', Uri.parse(rootUrl + resource.url));
+
+    request.fields.addAll(
+      requestModel.toJson(),
+    );
+
+    if (requestModel.exemptionFile != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+          'exemption_file', requestModel.exemptionFile!.path));
+    }
+
+    request.headers.addAll(headers);
+
+    http.Response response =
+        await http.Response.fromStream(await request.send());
+
     return resource.parse(response);
   }
 

@@ -72,6 +72,10 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
     }
   }
 
+  void callbackRefresh() {
+    _onRefresh();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -131,7 +135,9 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
           navigateTo(
             context,
             AttendanceHistoryDetailsScreen(
-                attendanceHistoryModel: attendanceHistoryModel),
+              attendanceHistoryModel: attendanceHistoryModel,
+              callbackRefresh: callbackRefresh,
+            ),
           );
         },
         child: Padding(
@@ -147,91 +153,85 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                 profileShadow(kGrey.withOpacity(0.3)),
               ],
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          attendanceHistoryModel.attendanceStatus ==
-                                  AttendanceStatus.present
-                              ? presentBadge()
-                              : (attendanceHistoryModel.attendanceStatus ==
-                                      AttendanceStatus.absent
-                                  ? absentBadge()
-                                  : SizedBox()),
+                Row(
+                  children: [
+                    attendanceHistoryModel.attendanceStatus ==
+                            AttendanceStatus.present
+                        ? presentBadge()
+                        : (attendanceHistoryModel.attendanceStatus ==
+                                AttendanceStatus.absent
+                            ? absentBadge()
+                            : SizedBox()),
 
-                          // if absent, show exemption. Else no exemption needed
-                          attendanceHistoryModel.attendanceStatus ==
-                                  AttendanceStatus.absent
-                              ? attendanceHistoryModel.exemptionStatus ==
-                                      ExemptionStatus.needed
-                                  ? exemptionNeededBadge()
-                                  : attendanceHistoryModel.exemptionStatus ==
-                                          ExemptionStatus.submitted
-                                      ? exemptionSubmittedBadge()
-                                      : SizedBox()
-                              : noExemptionNeededBadge(),
-                        ],
-                      ),
-                      Space(10),
-                      Text(
-                        "${attendanceHistoryModel.classroom!.section!.subject!.code!} (${attendanceHistoryModel.classroom!.classroomName})",
-                        style: TextStyle(
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Space(3),
-                      Text(
-                        attendanceHistoryModel.classroom!.section!.subjectName!,
-                        style: TextStyle(
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      // Space(3),
-                      // Text(
-                      //   attendanceHistoryModel.classroom!.venueName!,
-                      //   style: TextStyle(
-                      //     color: kPrimaryColor,
-                      //     fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
-                      // Space(3),
-                      // Text(
-                      //   attendanceHistoryModel.classroom!.sectionName!,
-                      //   style: TextStyle(
-                      //     color: kPrimaryColor,
-                      //     fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
-                      // Space(3),
-                      // Text(
-                      //   "Lecturer: ${attendanceHistoryModel.classroom!.section!.lecturerName!}",
-                      //   style: TextStyle(
-                      //     color: kPrimaryColor,
-                      //     fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
-                      Space(10),
-                      Text(
-                        "Start at : ${formatDate(attendanceHistoryModel.classroom!.startAt!)}",
-                        style: TextStyle(
-                          color: kPrimaryLight,
-                          fontSize: 11,
-                        ),
-                      ),
-                      Text(
-                        "End at   : ${formatDate(attendanceHistoryModel.classroom!.endAt!)}",
-                        style: TextStyle(
-                          color: kPrimaryLight,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
+                    // if absent, show exemption. Else no exemption needed
+                    attendanceHistoryModel.attendanceStatus ==
+                            AttendanceStatus.absent
+                        ? attendanceHistoryModel.exemptionStatus ==
+                                ExemptionStatus.needed
+                            ? exemptionNeededBadge()
+                            : attendanceHistoryModel.exemptionStatus ==
+                                    ExemptionStatus.submitted
+                                ? exemptionSubmittedBadge()
+                                : SizedBox()
+                        : noExemptionNeededBadge(),
+                  ],
+                ),
+                Space(10),
+                Text(
+                  "${attendanceHistoryModel.classroom!.section!.subject!.code!} (${attendanceHistoryModel.classroom!.classroomName})",
+                  style: TextStyle(
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Space(3),
+                Text(
+                  attendanceHistoryModel.classroom!.section!.subjectName!,
+                  style: TextStyle(
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // Space(3),
+                // Text(
+                //   attendanceHistoryModel.classroom!.venueName!,
+                //   style: TextStyle(
+                //     color: kPrimaryColor,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                // Space(3),
+                // Text(
+                //   attendanceHistoryModel.classroom!.sectionName!,
+                //   style: TextStyle(
+                //     color: kPrimaryColor,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                // Space(3),
+                // Text(
+                //   "Lecturer: ${attendanceHistoryModel.classroom!.section!.lecturerName!}",
+                //   style: TextStyle(
+                //     color: kPrimaryColor,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                Space(10),
+                Text(
+                  "Start at : ${formatDate(attendanceHistoryModel.classroom!.startAt!)}",
+                  style: TextStyle(
+                    color: kPrimaryLight,
+                    fontSize: 11,
+                  ),
+                ),
+                Text(
+                  "End at   : ${formatDate(attendanceHistoryModel.classroom!.endAt!)}",
+                  style: TextStyle(
+                    color: kPrimaryLight,
+                    fontSize: 11,
                   ),
                 ),
               ],

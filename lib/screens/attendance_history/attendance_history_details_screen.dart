@@ -11,8 +11,11 @@ import 'package:nfc_smart_attendance/screens/request_exemption/request_exemption
 
 class AttendanceHistoryDetailsScreen extends StatefulWidget {
   final AttendanceHistoryModel attendanceHistoryModel;
+  final Function() callbackRefresh;
   const AttendanceHistoryDetailsScreen(
-      {super.key, required this.attendanceHistoryModel});
+      {super.key,
+      required this.attendanceHistoryModel,
+      required this.callbackRefresh});
 
   @override
   State<AttendanceHistoryDetailsScreen> createState() =>
@@ -38,6 +41,10 @@ class _AttendanceHistoryDetailsScreenState
         backgroundColor: Colors.transparent,
         leading: BackButton(
           color: kPrimaryColor,
+          onPressed: () {
+            Navigator.pop(context);
+            widget.callbackRefresh();
+          },
         ),
       ),
       body: SafeArea(
@@ -221,14 +228,22 @@ class _AttendanceHistoryDetailsScreenState
               DelayedDisplay(
                 delay: Duration(milliseconds: 200),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: ButtonPrimary(
-                    "Upload Exemption",
+                    widget.attendanceHistoryModel.exemptionStatus ==
+                            ExemptionStatus.needed
+                        ? "Upload Exemption"
+                        : "Exemption has been submitted",
+                    isDisabled: widget.attendanceHistoryModel.exemptionStatus ==
+                            ExemptionStatus.needed
+                        ? false
+                        : true,
                     onPressed: () {
                       navigateTo(
                         context,
                         RequestExemptionScreen(
                           attendanceHistoryModel: widget.attendanceHistoryModel,
+                          callbackRefresh: widget.callbackRefresh,
                         ),
                       );
                     },
