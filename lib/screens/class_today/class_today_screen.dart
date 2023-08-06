@@ -18,7 +18,7 @@ class ClassTodayScreen extends StatefulWidget {
 
 class _ClassTodayScreenState extends State<ClassTodayScreen> {
   int delayAnimationDuration = 100;
-  String classMode = "Face to Face"; // change to Online
+  String classMode = "Face to Face"; // restart
 
   bool isAttendanceSubmitted = false;
 
@@ -32,7 +32,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
-      itemCount: 20, // Replace with your actual item count
+      itemCount: 20, //
       itemBuilder: (context, index) {
         return DelayedDisplay(
           delay: Duration(milliseconds: delayAnimationDuration),
@@ -99,7 +99,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
 
                           Space(10),
                           Text(
-                            "ISP641",
+                            "CSP650",
                             style: TextStyle(
                               color: kPrimaryColor,
                               fontWeight: FontWeight.bold,
@@ -107,7 +107,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                           ),
                           Space(3),
                           Text(
-                            "E Commerce Application",
+                            "Project",
                             style: TextStyle(
                               color: kPrimaryColor,
                               fontWeight: FontWeight.bold,
@@ -116,7 +116,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                           Space(10),
 
                           Text(
-                            "26 March 2023 | 4.00pm",
+                            "12 June 2023 | 10.00am - 12.00pm",
                             style: TextStyle(
                               color: kPrimaryLight,
                               fontSize: 11,
@@ -127,7 +127,7 @@ class _ClassTodayScreenState extends State<ClassTodayScreen> {
                     ),
                     SizedBox(width: 5),
                     Text(
-                      "09P",
+                      "DK A",
                       style: TextStyle(
                         color: kPrimaryColor,
                       ),

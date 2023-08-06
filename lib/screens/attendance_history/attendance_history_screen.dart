@@ -79,7 +79,7 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                           ),
                           Space(10),
                           Text(
-                            "26 March 2023 | 4.00pm",
+                            "6 June 2023 | 8.00am - 10.00am",
                             style: TextStyle(
                               color: kPrimaryLight,
                               fontSize: 11,
@@ -90,7 +90,7 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                     ),
                     SizedBox(width: 5),
                     Text(
-                      "09P",
+                      "DK A",
                       style: TextStyle(
                         color: kPrimaryColor,
                       ),

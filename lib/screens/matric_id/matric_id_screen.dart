@@ -53,12 +53,12 @@ class _MatricIDScreenState extends State<MatricIDScreen> {
               profileInformation(
                 title: "Full Name",
                 icon: Icons.person,
-                sub: "Muhammad Izham",
+                sub: "Abdullah Abid Gonzalez Zikry",
               ),
               profileInformation(
                 title: "Email",
                 icon: Icons.email,
-                sub: "izham@uitm.com",
+                sub: "abidCutie@uitm.edu.my",
               ),
               profileInformation(
                 title: "Phone No",

@@ -74,7 +74,7 @@ class _AttendanceHistoryDetailsScreenState
                   Expanded(
                     flex: 2,
                     child: Text(
-                      "Section:",
+                      "Class:",
                       style: TextStyle(
                         color: kPrimaryColor,
                         fontWeight: FontWeight.bold,
@@ -84,7 +84,7 @@ class _AttendanceHistoryDetailsScreenState
                   Expanded(
                     flex: 4,
                     child: Text(
-                      "09P",
+                      "M3CS2666A",
                       style: TextStyle(
                         color: kPrimaryLight,
                       ),
@@ -109,7 +109,7 @@ class _AttendanceHistoryDetailsScreenState
                   Expanded(
                     flex: 4,
                     child: Text(
-                      "Ts. Azma Binti Abdullah",
+                      "Ts. zhambros",
                       style: TextStyle(
                         color: kPrimaryLight,
                       ),
