@@ -14,7 +14,7 @@ class LoginFormBloc extends FormBloc<UserModel, UserResponseModel> {
 
   // For email field
   final email = TextFieldBloc(
-    initialValue: "hisyam@student.uitm.com",
+    initialValue: "izzham@student.uitm.com",
     validators: [
       FieldBlocValidators.required,
     ],
